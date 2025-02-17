@@ -14,7 +14,9 @@ return [PHP_INT_MAX, static fn () => \Symfony\Component\VarExporter\Internal\Hyd
                 null,
             ],
             'serialize' => [
-                [],
+                [
+                    null,
+                ],
             ],
             'description' => [
                 null,

@@ -53,7 +53,7 @@
         <parameter key="namespace">ApiPlatform\Symfony\Bundle</parameter>
       </parameter>
       <parameter key="MakerBundle" type="collection">
-        <parameter key="path">/Users/simonhrdy/Desktop/bakalarka/api/vendor/symfony/maker-bundle/src</parameter>
+        <parameter key="path">/Users/simonhrdy/Desktop/bakalarka/api/vendor/symfony/maker-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\MakerBundle</parameter>
       </parameter>
       <parameter key="LexikJWTAuthenticationBundle" type="collection">
@@ -292,17 +292,17 @@
       </parameter>
     </parameter>
     <parameter key="api_platform.docs_formats" type="collection">
-      <parameter key="jsonopenapi" type="collection">
-        <parameter>application/vnd.openapi+json</parameter>
-      </parameter>
-      <parameter key="yamlopenapi" type="collection">
-        <parameter>application/vnd.openapi+yaml</parameter>
-      </parameter>
       <parameter key="jsonld" type="collection">
         <parameter>application/ld+json</parameter>
       </parameter>
+      <parameter key="jsonopenapi" type="collection">
+        <parameter>application/vnd.openapi+json</parameter>
+      </parameter>
       <parameter key="html" type="collection">
         <parameter>text/html</parameter>
+      </parameter>
+      <parameter key="yamlopenapi" type="collection">
+        <parameter>application/vnd.openapi+yaml</parameter>
       </parameter>
     </parameter>
     <parameter key="api_platform.jsonschema_formats" type="collection">
@@ -617,7 +617,9 @@
       <argument type="service" id="debug.argument_resolver"/>
       <argument>true</argument>
     </service>
-    <service id="request_stack" class="Symfony\Component\HttpFoundation\RequestStack" public="true"/>
+    <service id="request_stack" class="Symfony\Component\HttpFoundation\RequestStack" public="true">
+      <tag name="kernel.reset" method="resetRequestFormats" on_invalid="ignore"/>
+    </service>
     <service id="http_cache" class="Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache">
       <tag name="container.hot_path"/>
       <argument type="service" id="kernel"/>
@@ -662,6 +664,8 @@
     </service>
     <service id="services_resetter" class="Symfony\Component\HttpKernel\DependencyInjection\ServicesResetter" public="true">
       <argument type="iterator">
+        <argument key="request_stack" type="service" id="request_stack" on-invalid="ignore_uninitialized"/>
+        <argument key="container.env_var_processor" type="service" id="container.env_var_processor" on-invalid="ignore_uninitialized"/>
         <argument key="cache.app" type="service" id="cache.app" on-invalid="ignore_uninitialized"/>
         <argument key="cache.system" type="service" id="cache.system" on-invalid="ignore_uninitialized"/>
         <argument key="cache.validator" type="service" id="cache.validator" on-invalid="ignore_uninitialized"/>
@@ -690,6 +694,12 @@
         <argument key="debug.security.event_dispatcher.api" type="service" id="debug.security.event_dispatcher.api" on-invalid="ignore_uninitialized"/>
       </argument>
       <argument type="collection">
+        <argument key="request_stack" type="collection">
+          <argument>?resetRequestFormats</argument>
+        </argument>
+        <argument key="container.env_var_processor" type="collection">
+          <argument>reset</argument>
+        </argument>
         <argument key="cache.app" type="collection">
           <argument>reset</argument>
         </argument>
@@ -786,6 +796,7 @@
     </service>
     <service id="container.env_var_processor" class="Symfony\Component\DependencyInjection\EnvVarProcessor">
       <tag name="container.env_var_processor"/>
+      <tag name="kernel.reset" method="reset"/>
       <argument type="service" id="service_container"/>
       <argument type="tagged_iterator" tag="container.env_var_loader"/>
     </service>
@@ -1427,7 +1438,6 @@
     </service>
     <service id="cache.system_clearer" class="Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer" public="true">
       <tag name="cache.pool.clearer"/>
-      <tag name="kernel.cache_clearer"/>
       <argument type="collection">
         <argument key="cache.system" type="service" id="cache.system" on-invalid="ignore_uninitialized"/>
         <argument key="cache.validator" type="service" id="cache.validator" on-invalid="ignore_uninitialized"/>
@@ -1555,6 +1565,14 @@
         <argument type="collection">
           <argument type="service_closure" id="security.context_listener.0"/>
           <argument>onKernelResponse</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>console.command</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="doctrine_migrations.schema_filter_listener"/>
+          <argument>onConsoleCommand</argument>
         </argument>
         <argument>0</argument>
       </call>
@@ -2151,6 +2169,9 @@
         <argument type="service" id="api_platform.yamlopenapi.encoder"/>
         <argument type="service" id="api_platform.jsonld.encoder"/>
         <argument type="service" id="api_platform.problem.encoder"/>
+      </argument>
+      <argument type="collection">
+        <argument key="hydra_prefix">false</argument>
       </argument>
     </service>
     <service id="serializer.mapping.class_discriminator_resolver" class="Symfony\Component\Serializer\Mapping\ClassDiscriminatorFromClassMetadata">
@@ -2964,11 +2985,11 @@
         <argument>!Doctrine</argument>
       </call>
       <call method="addPath">
-        <argument>/Users/simonhrdy/Desktop/bakalarka/api/vendor/doctrine/doctrine-migrations-bundle/Resources/views</argument>
+        <argument>/Users/simonhrdy/Desktop/bakalarka/api/vendor/doctrine/doctrine-migrations-bundle/templates</argument>
         <argument>DoctrineMigrations</argument>
       </call>
       <call method="addPath">
-        <argument>/Users/simonhrdy/Desktop/bakalarka/api/vendor/doctrine/doctrine-migrations-bundle/Resources/views</argument>
+        <argument>/Users/simonhrdy/Desktop/bakalarka/api/vendor/doctrine/doctrine-migrations-bundle/templates</argument>
         <argument>!DoctrineMigrations</argument>
       </call>
       <call method="addPath">
@@ -2978,6 +2999,14 @@
       <call method="addPath">
         <argument>/Users/simonhrdy/Desktop/bakalarka/api/vendor/api-platform/symfony/Bundle/Resources/views</argument>
         <argument>!ApiPlatform</argument>
+      </call>
+      <call method="addPath">
+        <argument>/Users/simonhrdy/Desktop/bakalarka/api/vendor/symfony/maker-bundle/templates</argument>
+        <argument>Maker</argument>
+      </call>
+      <call method="addPath">
+        <argument>/Users/simonhrdy/Desktop/bakalarka/api/vendor/symfony/maker-bundle/templates</argument>
+        <argument>!Maker</argument>
       </call>
       <call method="addPath">
         <argument>/Users/simonhrdy/Desktop/bakalarka/api/templates</argument>
@@ -3966,6 +3995,9 @@
       <call method="setSchemaManagerFactory">
         <argument type="service" id="doctrine.dbal.legacy_schema_manager_factory"/>
       </call>
+      <call method="setSchemaAssetsFilter">
+        <argument type="service" id="doctrine.dbal.default_schema_asset_filter_manager"/>
+      </call>
       <call method="setMiddlewares">
         <argument type="collection">
           <argument type="service" id="doctrine.dbal.debug_middleware.default"/>
@@ -4546,6 +4578,12 @@
         <argument>Manually add and delete migration versions from the version table.</argument>
       </call>
     </service>
+    <service id="doctrine_migrations.schema_filter_listener" class="Doctrine\Bundle\MigrationsBundle\EventListener\SchemaFilterListener">
+      <tag name="doctrine.dbal.schema_filter"/>
+      <tag name="kernel.event_listener" event="console.command" method="onConsoleCommand"/>
+      <tag name="container.no_preload"/>
+      <argument>doctrine_migration_versions</argument>
+    </service>
     <service id="doctrine.migrations.storage.table_storage" class="Doctrine\Migrations\Metadata\Storage\TableMetadataStorageConfiguration"/>
     <service id="nelmio_cors.cors_listener" class="Nelmio\CorsBundle\EventListener\CorsListener">
       <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="250"/>
@@ -4569,7 +4607,7 @@
       <tag name="container.hot_path"/>
     </service>
     <service id="api_platform.state_provider.locator" class="ApiPlatform\State\CallableProvider">
-      <argument type="service" id=".service_locator.Gj9ZKRC"/>
+      <argument type="service" id=".service_locator.CyE6OOE"/>
     </service>
     <service id="api_platform.state_processor.locator" class="ApiPlatform\State\CallableProcessor">
       <argument type="service" id=".service_locator.tRSBvkY"/>
@@ -4608,7 +4646,7 @@
       <tag name="api_platform.state_provider" key="api_platform.state_provider.object"/>
     </service>
     <service id="api_platform.state_provider.backed_enum" class="ApiPlatform\State\Provider\BackedEnumProvider">
-      <tag name="api_platform.state_provider" key="ApiPlatform\State\Provider\BackedEnumProvidevr"/>
+      <tag name="api_platform.state_provider" key="ApiPlatform\State\Provider\BackedEnumProvider"/>
       <tag name="api_platform.state_provider" key="api_platform.state_provider.backed_enum"/>
     </service>
     <service id="api_platform.listener.exception" class="ApiPlatform\Symfony\EventListener\ExceptionListener">
@@ -4967,7 +5005,8 @@
       <argument type="service" id="api_platform.metadata.property.name_collection_factory.cached"/>
       <argument type="service" id="api_platform.metadata.property.metadata_factory.cached"/>
       <argument type="service" id="api_platform.metadata.resource.metadata_collection_factory.attributes"/>
-      <argument type="service" id="api_platform.filter_locator"/>
+      <argument type="service" id="api_platform.filter_locator" on-invalid="ignore"/>
+      <argument type="service" id="api_platform.hydra.name_converter.hydra_prefix" on-invalid="ignore"/>
     </service>
     <service id="api_platform.metadata.resource.metadata_collection_factory.cached" class="ApiPlatform\Metadata\Resource\Factory\CachedResourceMetadataCollectionFactory">
       <argument type="service" id="api_platform.cache.metadata.resource_collection"/>
@@ -6769,6 +6808,11 @@
       <argument type="service" id=".doctrine.orm.default_metadata_driver.inner"/>
       <argument type="service" id=".service_locator.BxSdgVt"/>
     </service>
+    <service id="doctrine.dbal.default_schema_asset_filter_manager" class="Doctrine\Bundle\DoctrineBundle\Dbal\SchemaAssetsFilterManager">
+      <argument type="collection">
+        <argument type="service" id="doctrine_migrations.schema_filter_listener"/>
+      </argument>
+    </service>
     <service id="doctrine.dbal.debug_middleware.default" class="Doctrine\Bundle\DoctrineBundle\Middleware\DebugMiddleware">
       <argument type="service" id="doctrine.debug_data_holder"/>
       <argument type="service" id="debug.stopwatch" on-invalid="null"/>
@@ -6959,14 +7003,14 @@
         <argument key="security.csrf.token_manager" type="service_closure" id="security.csrf.token_manager" on-invalid="ignore"/>
       </argument>
     </service>
-    <service id=".service_locator.Gj9ZKRC" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.CyE6OOE" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="ApiPlatform\State\CreateProvider" type="service_closure" id="api_platform.state_provider.create"/>
         <argument key="api_platform.state_provider.create" type="service_closure" id="api_platform.state_provider.create"/>
         <argument key="ApiPlatform\State\ObjectProvider" type="service_closure" id="api_platform.state_provider.object"/>
         <argument key="api_platform.state_provider.object" type="service_closure" id="api_platform.state_provider.object"/>
-        <argument key="ApiPlatform\State\Provider\BackedEnumProvidevr" type="service_closure" id="api_platform.state_provider.backed_enum"/>
+        <argument key="ApiPlatform\State\Provider\BackedEnumProvider" type="service_closure" id="api_platform.state_provider.backed_enum"/>
         <argument key="api_platform.state_provider.backed_enum" type="service_closure" id="api_platform.state_provider.backed_enum"/>
         <argument key="api_platform.state.error_provider" type="service_closure" id="api_platform.state.error_provider"/>
         <argument key="api_platform.validator.state.error_provider" type="service_closure" id="api_platform.validator.state.error_provider"/>

@@ -16,6 +16,7 @@ return [
             [['_route' => 'game_app_game_list', '_controller' => 'App\\Controller\\GameController::list'], null, ['GET' => 0], null, false, false, null],
             [['_route' => 'game_app_game_create', '_controller' => 'App\\Controller\\GameController::create'], null, ['POST' => 0], null, false, false, null],
         ],
+        '/api' => [[['_route' => 'app_home', '_controller' => 'App\\Controller\\HomeController::index'], null, null, null, true, false, null]],
         '/api/league' => [
             [['_route' => 'league_app_league_list', '_controller' => 'App\\Controller\\LeagueController::list'], null, ['GET' => 0], null, false, false, null],
             [['_route' => 'league_app_league_create', '_controller' => 'App\\Controller\\LeagueController::create'], null, ['POST' => 0], null, false, false, null],
@@ -59,6 +60,7 @@ return [
         '/api/users/me' => [[['_route' => 'user_app_user_getme', '_controller' => 'App\\Controller\\UserController::getMe'], null, ['GET' => 0], null, false, false, null]],
         '/api/docs' => [[['_route' => 'app.swagger_ui', '_controller' => 'nelmio_api_doc.controller.swagger_ui'], null, ['GET' => 0], null, false, false, null]],
         '/api/login_check' => [[['_route' => 'api_login_check'], null, null, null, false, false, null]],
+        '/' => [[['_route' => 'home', '_controller' => 'App\\Controller\\HomeController::index'], null, null, null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'

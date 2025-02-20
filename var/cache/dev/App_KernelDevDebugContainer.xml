@@ -3017,6 +3017,34 @@
         </argument>
         <argument>null</argument>
       </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.0IaO7mb"/>
+        <argument type="collection">
+          <argument>IS_AUTHENTICATED_FULLY</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.1y5hIfc"/>
+        <argument type="collection">
+          <argument>IS_AUTHENTICATED_FULLY</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.miF2Puk"/>
+        <argument type="collection">
+          <argument>IS_AUTHENTICATED_FULLY</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.mQnFYny"/>
+        <argument type="collection">
+          <argument>IS_AUTHENTICATED_FULLY</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
     </service>
     <service id="security.context_listener" class="Symfony\Component\Security\Http\Firewall\ContextListener">
       <tag name="monolog.logger" channel="security"/>
@@ -3636,6 +3664,42 @@
       <argument type="collection">
         <argument type="service" id=".security.request_matcher.m1Zgqh."/>
         <argument type="service" id=".security.request_matcher.se4Xb4m"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.U8tE9as" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/api/game/</argument>
+    </service>
+    <service id=".security.request_matcher.0IaO7mb" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.m1Zgqh."/>
+        <argument type="service" id=".security.request_matcher.U8tE9as"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.2.XyjJe" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/api/league/</argument>
+    </service>
+    <service id=".security.request_matcher.1y5hIfc" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.m1Zgqh."/>
+        <argument type="service" id=".security.request_matcher.2.XyjJe"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.GMIr5FW" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/api/player-history</argument>
+    </service>
+    <service id=".security.request_matcher.miF2Puk" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.m1Zgqh."/>
+        <argument type="service" id=".security.request_matcher.GMIr5FW"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.7BEX4Dk" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/api/player-stats</argument>
+    </service>
+    <service id=".security.request_matcher.mQnFYny" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.m1Zgqh."/>
+        <argument type="service" id=".security.request_matcher.7BEX4Dk"/>
       </argument>
     </service>
     <service id="security.command.user_password_hash" class="Symfony\Component\PasswordHasher\Command\UserPasswordHashCommand">
@@ -4619,6 +4683,55 @@
           </argument>
         </argument>
         <argument key="use_validation_groups">true</argument>
+        <argument key="paths" type="collection">
+          <argument key="/api/login_check" type="collection">
+            <argument key="post" type="collection">
+              <argument key="tags" type="collection">
+                <argument>Login</argument>
+              </argument>
+              <argument key="summary">Přihlášení uživatele</argument>
+              <argument key="requestBody" type="collection">
+                <argument key="required">true</argument>
+                <argument key="content" type="collection">
+                  <argument key="application/json" type="collection">
+                    <argument key="schema" type="collection">
+                      <argument key="type">object</argument>
+                      <argument key="properties" type="collection">
+                        <argument key="username" type="collection">
+                          <argument key="type">string</argument>
+                        </argument>
+                        <argument key="password" type="collection">
+                          <argument key="type">string</argument>
+                          <argument key="format">password</argument>
+                        </argument>
+                      </argument>
+                    </argument>
+                  </argument>
+                </argument>
+              </argument>
+              <argument key="responses" type="collection">
+                <argument key="200" type="collection">
+                  <argument key="description">Úspěšné přihlášení</argument>
+                  <argument key="content" type="collection">
+                    <argument key="application/json" type="collection">
+                      <argument key="schema" type="collection">
+                        <argument key="type">object</argument>
+                        <argument key="properties" type="collection">
+                          <argument key="token" type="collection">
+                            <argument key="type">string</argument>
+                          </argument>
+                        </argument>
+                      </argument>
+                    </argument>
+                  </argument>
+                </argument>
+                <argument key="401" type="collection">
+                  <argument key="description">Neplatné přihlašovací údaje</argument>
+                </argument>
+              </argument>
+            </argument>
+          </argument>
+        </argument>
       </argument>
     </service>
     <service id="nelmio_api_doc.describers.default" class="Nelmio\ApiDocBundle\Describer\DefaultDescriber">

@@ -1,8 +1,11 @@
 nelmio_api_doc:
+  areas:
+    path_patterns:
+      - ^/api/(?!$).*
   documentation:
     info:
       title: "API Dokumentace"
-      description: "API k bakálářské práci SportMatter<br> @Šimon Hrdý 2025"
+      description: "API k bakalářské práci SportMatter<br> @Šimon Hrdý 2025"
       version: "1.0.0"
     components:
       securitySchemes:
@@ -42,4 +45,3 @@ nelmio_api_doc:
                         type: string
             401:
               description: "Neplatné přihlašovací údaje"
-

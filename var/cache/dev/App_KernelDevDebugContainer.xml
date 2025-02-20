@@ -4673,7 +4673,7 @@
       <argument type="collection">
         <argument key="info" type="collection">
           <argument key="title">API Dokumentace</argument>
-          <argument key="description">API k bakálářské práci SportMatter&lt;br&gt; @Šimon Hrdý 2025</argument>
+          <argument key="description">API k bakalářské práci SportMatter&lt;br&gt; @Šimon Hrdý 2025</argument>
           <argument key="version">1.0.0</argument>
         </argument>
         <argument key="components" type="collection">
@@ -4904,7 +4904,28 @@
       <argument>true</argument>
     </service>
     <service id="nelmio_api_doc.routes.default" class="Symfony\Component\Routing\RouteCollection">
-      <factory service="router.default" method="getRouteCollection"/>
+      <argument type="service">
+        <service class="Symfony\Component\Routing\RouteCollection">
+          <factory service="router.default" method="getRouteCollection"/>
+        </service>
+      </argument>
+      <factory method="filter">
+        <service class="Nelmio\ApiDocBundle\Routing\FilteredRouteCollectionBuilder">
+          <argument type="service" id="annotation_reader" on-invalid="null"/>
+          <argument type="service" id="nelmio_api_doc.controller_reflector"/>
+          <argument>default</argument>
+          <argument type="collection">
+            <argument key="path_patterns" type="collection">
+              <argument>^/api/(?!$).*</argument>
+            </argument>
+            <argument key="host_patterns" type="collection"/>
+            <argument key="name_patterns" type="collection"/>
+            <argument key="with_annotation">false</argument>
+            <argument key="with_attribute">false</argument>
+            <argument key="disable_default_routes">false</argument>
+          </argument>
+        </service>
+      </factory>
     </service>
     <service id="nelmio_api_doc.generator_locator" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>

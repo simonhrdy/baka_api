@@ -797,12 +797,23 @@ class FrameworkConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
     }
 
     /**
+     * @template TValue
+     * @param TValue $value
      * web links configuration
-     * @default {"enabled":true}
-    */
-    public function webLink(array $value = []): \Symfony\Config\Framework\WebLinkConfig
+     * @default {"enabled":false}
+     * @return \Symfony\Config\Framework\WebLinkConfig|$this
+     * @psalm-return (TValue is array ? \Symfony\Config\Framework\WebLinkConfig : static)
+     */
+    public function webLink(array $value = []): \Symfony\Config\Framework\WebLinkConfig|static
     {
-        if (null === $this->webLink) {
+        if (!\is_array($value)) {
+            $this->_usedProperties['webLink'] = true;
+            $this->webLink = $value;
+
+            return $this;
+        }
+
+        if (!$this->webLink instanceof \Symfony\Config\Framework\WebLinkConfig) {
             $this->_usedProperties['webLink'] = true;
             $this->webLink = new \Symfony\Config\Framework\WebLinkConfig($value);
         } elseif (0 < \func_num_args()) {
@@ -1058,12 +1069,23 @@ class FrameworkConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
     }
 
     /**
+     * @template TValue
+     * @param TValue $value
      * Uid configuration
-     * @default {"enabled":true,"default_uuid_version":7,"name_based_uuid_version":5,"time_based_uuid_version":7}
-    */
-    public function uid(array $value = []): \Symfony\Config\Framework\UidConfig
+     * @default {"enabled":false,"default_uuid_version":7,"name_based_uuid_version":5,"time_based_uuid_version":7}
+     * @return \Symfony\Config\Framework\UidConfig|$this
+     * @psalm-return (TValue is array ? \Symfony\Config\Framework\UidConfig : static)
+     */
+    public function uid(array $value = []): \Symfony\Config\Framework\UidConfig|static
     {
-        if (null === $this->uid) {
+        if (!\is_array($value)) {
+            $this->_usedProperties['uid'] = true;
+            $this->uid = $value;
+
+            return $this;
+        }
+
+        if (!$this->uid instanceof \Symfony\Config\Framework\UidConfig) {
             $this->_usedProperties['uid'] = true;
             $this->uid = new \Symfony\Config\Framework\UidConfig($value);
         } elseif (0 < \func_num_args()) {
@@ -1385,7 +1407,7 @@ class FrameworkConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
 
         if (array_key_exists('web_link', $value)) {
             $this->_usedProperties['webLink'] = true;
-            $this->webLink = new \Symfony\Config\Framework\WebLinkConfig($value['web_link']);
+            $this->webLink = \is_array($value['web_link']) ? new \Symfony\Config\Framework\WebLinkConfig($value['web_link']) : $value['web_link'];
             unset($value['web_link']);
         }
 
@@ -1451,7 +1473,7 @@ class FrameworkConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
 
         if (array_key_exists('uid', $value)) {
             $this->_usedProperties['uid'] = true;
-            $this->uid = new \Symfony\Config\Framework\UidConfig($value['uid']);
+            $this->uid = \is_array($value['uid']) ? new \Symfony\Config\Framework\UidConfig($value['uid']) : $value['uid'];
             unset($value['uid']);
         }
 
@@ -1593,7 +1615,7 @@ class FrameworkConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
             $output['exceptions'] = array_map(fn ($v) => $v->toArray(), $this->exceptions);
         }
         if (isset($this->_usedProperties['webLink'])) {
-            $output['web_link'] = $this->webLink->toArray();
+            $output['web_link'] = $this->webLink instanceof \Symfony\Config\Framework\WebLinkConfig ? $this->webLink->toArray() : $this->webLink;
         }
         if (isset($this->_usedProperties['lock'])) {
             $output['lock'] = $this->lock instanceof \Symfony\Config\Framework\LockConfig ? $this->lock->toArray() : $this->lock;
@@ -1626,7 +1648,7 @@ class FrameworkConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
             $output['rate_limiter'] = $this->rateLimiter instanceof \Symfony\Config\Framework\RateLimiterConfig ? $this->rateLimiter->toArray() : $this->rateLimiter;
         }
         if (isset($this->_usedProperties['uid'])) {
-            $output['uid'] = $this->uid->toArray();
+            $output['uid'] = $this->uid instanceof \Symfony\Config\Framework\UidConfig ? $this->uid->toArray() : $this->uid;
         }
         if (isset($this->_usedProperties['htmlSanitizer'])) {
             $output['html_sanitizer'] = $this->htmlSanitizer instanceof \Symfony\Config\Framework\HtmlSanitizerConfig ? $this->htmlSanitizer->toArray() : $this->htmlSanitizer;

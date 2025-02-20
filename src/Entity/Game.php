@@ -2,15 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
-use ApiPlatform\OpenApi\Model\Operation;
-use ApiPlatform\OpenApi\Model\Parameter;
 use App\Repository\GameRepository;
 use DateTime;
 use DateTimeInterface;
@@ -20,33 +11,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
-#[ApiResource(
-    operations: [
-        new GetCollection(
-            uriTemplate: '/dateGames/{date}',
-            controller: 'App\Controller\GameDateController',
-            openapi: new Operation(
-                parameters: [
-                    new Parameter(
-                        'date',
-                        'path',
-                        true,
-                        'The date of the game',
-                        false,
-                        'string',
-                        ['format' => 'date'],
-                    ),
-                ]
-            )
-        ),
-        new Get(),
-        new Post(),
-        new Put(),
-        new Delete(),
-        new GetCollection(),
-    ]
-)]
-
 class Game
 {
     #[ORM\Id]

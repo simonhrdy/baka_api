@@ -8,307 +8,179 @@
 return [
     false, // $matchHost
     [ // $staticRoutes
-        '/api/login' => [
-            [['_route' => 'LoginUser', '_controller' => 'App\\Controller\\AuthController', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\User', '_api_operation_name' => 'LoginUser'], null, ['POST' => 0], null, false, false, null],
-            [['_route' => 'api_login', '_controller' => 'App\\Controller\\AuthController'], null, ['POST' => 0], null, false, false, null],
+        '/api/countries' => [
+            [['_route' => 'country_app_country_list', '_controller' => 'App\\Controller\\CountryController::list'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'country_app_country_create', '_controller' => 'App\\Controller\\CountryController::create'], null, ['POST' => 0], null, false, false, null],
         ],
-        '/api/admin/login' => [[['_route' => 'api_admin_login', '_controller' => 'App\\Controller\\AuthControllerAdmin'], null, ['POST' => 0], null, false, false, null]],
-        '/api/user/me' => [[['_route' => 'api_user_me', '_controller' => 'App\\Controller\\UserController::getUserData'], null, ['GET' => 0], null, false, false, null]],
+        '/api/game' => [
+            [['_route' => 'game_app_game_list', '_controller' => 'App\\Controller\\GameController::list'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'game_app_game_create', '_controller' => 'App\\Controller\\GameController::create'], null, ['POST' => 0], null, false, false, null],
+        ],
+        '/api/league' => [
+            [['_route' => 'league_app_league_list', '_controller' => 'App\\Controller\\LeagueController::list'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'league_app_league_create', '_controller' => 'App\\Controller\\LeagueController::create'], null, ['POST' => 0], null, false, false, null],
+        ],
+        '/api/players' => [
+            [['_route' => 'player_app_player_list', '_controller' => 'App\\Controller\\PlayerController::list'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'player_app_player_create', '_controller' => 'App\\Controller\\PlayerController::create'], null, ['POST' => 0], null, false, false, null],
+        ],
+        '/api/player-history' => [
+            [['_route' => 'player_history_app_playerhistory_list', '_controller' => 'App\\Controller\\PlayerHistoryController::list'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'player_history_app_playerhistory_create', '_controller' => 'App\\Controller\\PlayerHistoryController::create'], null, ['POST' => 0], null, false, false, null],
+        ],
+        '/api/player-stats' => [
+            [['_route' => 'player_stats_app_playerstats_list', '_controller' => 'App\\Controller\\PlayerStatsController::list'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'player_stats_app_playerstats_create', '_controller' => 'App\\Controller\\PlayerStatsController::create'], null, ['POST' => 0], null, false, false, null],
+        ],
+        '/api/referees' => [
+            [['_route' => 'referee_app_referee_list', '_controller' => 'App\\Controller\\RefereeController::list'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'referee_app_referee_create', '_controller' => 'App\\Controller\\RefereeController::create'], null, ['POST' => 0], null, false, false, null],
+        ],
+        '/api/seasons' => [
+            [['_route' => 'season_app_season_list', '_controller' => 'App\\Controller\\SeasonController::list'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'season_app_season_create', '_controller' => 'App\\Controller\\SeasonController::create'], null, ['POST' => 0], null, false, false, null],
+        ],
+        '/api/sports' => [
+            [['_route' => 'sport_app_sport_list', '_controller' => 'App\\Controller\\SportController::list'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'sport_app_sport_create', '_controller' => 'App\\Controller\\SportController::create'], null, ['POST' => 0], null, false, false, null],
+        ],
+        '/api/stadiums' => [
+            [['_route' => 'stadium_app_stadium_list', '_controller' => 'App\\Controller\\StadiumController::list'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'stadium_app_stadium_create', '_controller' => 'App\\Controller\\StadiumController::create'], null, ['POST' => 0], null, false, false, null],
+        ],
+        '/api/teams' => [
+            [['_route' => 'team_app_team_list', '_controller' => 'App\\Controller\\TeamController::list'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'team_app_team_create', '_controller' => 'App\\Controller\\TeamController::create'], null, ['POST' => 0], null, false, false, null],
+        ],
+        '/api/users' => [
+            [['_route' => 'user_app_user_list', '_controller' => 'App\\Controller\\UserController::list'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'user_app_user_create', '_controller' => 'App\\Controller\\UserController::create'], null, ['POST' => 0], null, false, false, null],
+        ],
+        '/api/users/me' => [[['_route' => 'user_app_user_getme', '_controller' => 'App\\Controller\\UserController::getMe'], null, ['GET' => 0], null, false, false, null]],
+        '/api/docs' => [[['_route' => 'app.swagger_ui', '_controller' => 'nelmio_api_doc.controller.swagger_ui'], null, ['GET' => 0], null, false, false, null]],
+        '/api/login_check' => [[['_route' => 'api_login_check'], null, null, null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
-                .'|/api(?'
-                    .'|/(?'
-                        .'|\\.well\\-known/genid/([^/]++)(*:46)'
-                        .'|errors/(\\d+)(*:65)'
-                        .'|validation_errors/([^/]++)(*:98)'
+                .'|/_error/(\\d+)(?:\\.([^/]++))?(*:35)'
+                .'|/api/(?'
+                    .'|countries/([^/]++)(?'
+                        .'|(*:71)'
                     .')'
-                    .'|(?:/(index)(?:\\.([^/]++))?)?(*:134)'
-                    .'|/(?'
-                        .'|d(?'
-                            .'|ocs(?:\\.([^/]++))?(*:168)'
-                            .'|ateGames/([^/]++)(*:193)'
+                    .'|game/(?'
+                        .'|([^/]++)(?'
+                            .'|(*:98)'
                         .')'
-                        .'|co(?'
-                            .'|ntexts/([^.]+)(?:\\.(jsonld))?(*:236)'
-                            .'|untries(?'
-                                .'|/([^/\\.]++)(?:\\.([^/]++))?(*:280)'
-                                .'|(?:\\.([^/]++))?(?'
-                                    .'|(*:306)'
-                                .')'
-                                .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
-                                    .'|(*:344)'
-                                .')'
+                        .'|date/([^/]++)(*:119)'
+                    .')'
+                    .'|league/([^/]++)(?'
+                        .'|(*:146)'
+                    .')'
+                    .'|player(?'
+                        .'|s/([^/]++)(?'
+                            .'|(*:177)'
+                        .')'
+                        .'|\\-(?'
+                            .'|history/([^/]++)(?'
+                                .'|(*:210)'
                             .')'
-                        .')'
-                        .'|validation_errors/([^/]++)(?'
-                            .'|(*:384)'
-                        .')'
-                        .'|games(?'
-                            .'|/([^/\\.]++)(?:\\.([^/]++))?(*:427)'
-                            .'|(?:\\.([^/]++))?(*:450)'
-                            .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
-                                .'|(*:487)'
-                            .')'
-                            .'|(?:\\.([^/]++))?(*:511)'
-                        .')'
-                        .'|leagues(?'
-                            .'|/([^/\\.]++)(?:\\.([^/]++))?(*:556)'
-                            .'|(?:\\.([^/]++))?(?'
-                                .'|(*:582)'
-                            .')'
-                            .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
-                                .'|(*:620)'
+                            .'|stats/([^/]++)(?'
+                                .'|(*:236)'
                             .')'
                         .')'
-                        .'|match_has_referees(?'
-                            .'|/([^/\\.]++)(?:\\.([^/]++))?(*:677)'
-                            .'|(?:\\.([^/]++))?(?'
-                                .'|(*:703)'
-                            .')'
-                            .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
-                                .'|(*:741)'
-                            .')'
+                    .')'
+                    .'|referees/([^/]++)(?'
+                        .'|(*:267)'
+                    .')'
+                    .'|s(?'
+                        .'|easons/([^/]++)(?'
+                            .'|(*:298)'
                         .')'
-                        .'|player(?'
-                            .'|s(?'
-                                .'|/([^/\\.]++)(?:\\.([^/]++))?(*:790)'
-                                .'|(?:\\.([^/]++))?(?'
-                                    .'|(*:816)'
-                                .')'
-                                .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
-                                    .'|(*:854)'
-                                .')'
-                            .')'
-                            .'|_(?'
-                                .'|histories(?'
-                                    .'|/([^/\\.]++)(?:\\.([^/]++))?(*:906)'
-                                    .'|(?:\\.([^/]++))?(?'
-                                        .'|(*:932)'
-                                    .')'
-                                    .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
-                                        .'|(*:970)'
-                                    .')'
-                                .')'
-                                .'|stats(?'
-                                    .'|/([^/\\.]++)(?:\\.([^/]++))?(*:1014)'
-                                    .'|(?:\\.([^/]++))?(?'
-                                        .'|(*:1041)'
-                                    .')'
-                                    .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
-                                        .'|(*:1080)'
-                                    .')'
-                                .')'
-                            .')'
+                        .'|ports/([^/]++)(?'
+                            .'|(*:324)'
                         .')'
-                        .'|referees(?'
-                            .'|/([^/\\.]++)(?:\\.([^/]++))?(*:1130)'
-                            .'|(?:\\.([^/]++))?(?'
-                                .'|(*:1157)'
-                            .')'
-                            .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
-                                .'|(*:1196)'
-                            .')'
+                        .'|tadiums/([^/]++)(?'
+                            .'|(*:352)'
                         .')'
-                        .'|s(?'
-                            .'|easons(?'
-                                .'|/([^/\\.]++)(?:\\.([^/]++))?(*:1246)'
-                                .'|(?:\\.([^/]++))?(?'
-                                    .'|(*:1273)'
-                                .')'
-                                .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
-                                    .'|(*:1312)'
-                                .')'
-                            .')'
-                            .'|ports(?'
-                                .'|/([^/\\.]++)(?:\\.([^/]++))?(*:1357)'
-                                .'|(?:\\.([^/]++))?(?'
-                                    .'|(*:1384)'
-                                .')'
-                                .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
-                                    .'|(*:1423)'
-                                .')'
-                            .')'
-                            .'|tadia(?'
-                                .'|/([^/\\.]++)(?:\\.([^/]++))?(*:1468)'
-                                .'|(?:\\.([^/]++))?(?'
-                                    .'|(*:1495)'
-                                .')'
-                                .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
-                                    .'|(*:1534)'
-                                .')'
-                            .')'
+                    .')'
+                    .'|teams/([^/]++)(?'
+                        .'|(*:379)'
+                    .')'
+                    .'|users/(?'
+                        .'|([^/]++)(?'
+                            .'|(*:408)'
+                            .'|/change\\-password(*:433)'
                         .')'
-                        .'|teams(?'
-                            .'|/([^/\\.]++)(?:\\.([^/]++))?(*:1580)'
-                            .'|(?:\\.([^/]++))?(?'
-                                .'|(*:1607)'
-                            .')'
-                            .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
-                                .'|(*:1646)'
-                            .')'
-                        .')'
-                        .'|user(?'
-                            .'|s(?'
-                                .'|/([^/\\.]++)(?:\\.([^/]++))?(*:1694)'
-                                .'|(?:\\.([^/]++))?(*:1718)'
-                                .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
-                                    .'|(*:1756)'
-                                .')'
-                                .'|(?:\\.([^/]++))?(*:1781)'
-                            .')'
-                            .'|_has_favorite_teams(?'
-                                .'|/([^/\\.]++)(?:\\.([^/]++))?(*:1839)'
-                                .'|(?:\\.([^/]++))?(?'
-                                    .'|(*:1866)'
-                                .')'
-                                .'|/([^/\\.]++)(?:\\.([^/]++))?(?'
-                                    .'|(*:1905)'
-                                .')'
-                            .')'
-                        .')'
+                        .'|forgot\\-password(*:458)'
                     .')'
                 .')'
-                .'|/_error/(\\d+)(?:\\.([^/]++))?(*:1947)'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
-        46 => [[['_route' => 'api_genid', '_controller' => 'api_platform.action.not_exposed', '_api_respond' => 'true'], ['id'], ['GET' => 0, 'HEAD' => 1], null, false, true, null]],
-        65 => [[['_route' => 'api_errors', '_controller' => 'api_platform.action.error_page'], ['status'], ['GET' => 0, 'HEAD' => 1], null, false, true, null]],
-        98 => [[['_route' => 'api_validation_errors', '_controller' => 'api_platform.action.not_exposed'], ['id'], ['GET' => 0, 'HEAD' => 1], null, false, true, null]],
-        134 => [[['_route' => 'api_entrypoint', '_controller' => 'api_platform.action.entrypoint', '_format' => '', '_api_respond' => 'true', 'index' => 'index'], ['index', '_format'], ['GET' => 0, 'HEAD' => 1], null, false, true, null]],
-        168 => [[['_route' => 'api_doc', '_controller' => 'api_platform.action.documentation', '_format' => '', '_api_respond' => 'true'], ['_format'], ['GET' => 0, 'HEAD' => 1], null, false, true, null]],
-        193 => [[['_route' => '_api_/dateGames/{date}_get_collection', '_controller' => 'App\\Controller\\GameDateController', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Game', '_api_operation_name' => '_api_/dateGames/{date}_get_collection'], ['date'], ['GET' => 0], null, false, true, null]],
-        236 => [[['_route' => 'api_jsonld_context', '_controller' => 'api_platform.jsonld.action.context', '_format' => 'jsonld', '_api_respond' => 'true'], ['shortName', '_format'], ['GET' => 0, 'HEAD' => 1], null, false, true, null]],
-        280 => [[['_route' => '_api_/countries/{id}{._format}_get', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Country', '_api_operation_name' => '_api_/countries/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
-        306 => [
-            [['_route' => '_api_/countries{._format}_get_collection', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Country', '_api_operation_name' => '_api_/countries{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null],
-            [['_route' => '_api_/countries{._format}_post', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Country', '_api_operation_name' => '_api_/countries{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null],
+        35 => [[['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null]],
+        71 => [
+            [['_route' => 'country_app_country_getcountry', '_controller' => 'App\\Controller\\CountryController::getCountry'], ['id'], ['GET' => 0], null, false, true, null],
+            [['_route' => 'country_app_country_update', '_controller' => 'App\\Controller\\CountryController::update'], ['id'], ['PUT' => 0], null, false, true, null],
+            [['_route' => 'country_app_country_delete', '_controller' => 'App\\Controller\\CountryController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
-        344 => [
-            [['_route' => '_api_/countries/{id}{._format}_patch', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Country', '_api_operation_name' => '_api_/countries/{id}{._format}_patch'], ['id', '_format'], ['PATCH' => 0], null, false, true, null],
-            [['_route' => '_api_/countries/{id}{._format}_delete', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Country', '_api_operation_name' => '_api_/countries/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
+        98 => [
+            [['_route' => 'game_app_game_getgame', '_controller' => 'App\\Controller\\GameController::getGame'], ['id'], ['GET' => 0], null, false, true, null],
+            [['_route' => 'game_app_game_update', '_controller' => 'App\\Controller\\GameController::update'], ['id'], ['PUT' => 0], null, false, true, null],
+            [['_route' => 'game_app_game_delete', '_controller' => 'App\\Controller\\GameController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
-        384 => [
-            [['_route' => '_api_validation_errors_problem', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'ApiPlatform\\Validator\\Exception\\ValidationException', '_api_operation_name' => '_api_validation_errors_problem'], ['id'], ['GET' => 0], null, false, true, null],
-            [['_route' => '_api_validation_errors_hydra', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'ApiPlatform\\Validator\\Exception\\ValidationException', '_api_operation_name' => '_api_validation_errors_hydra'], ['id'], ['GET' => 0], null, false, true, null],
-            [['_route' => '_api_validation_errors_jsonapi', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'ApiPlatform\\Validator\\Exception\\ValidationException', '_api_operation_name' => '_api_validation_errors_jsonapi'], ['id'], ['GET' => 0], null, false, true, null],
+        119 => [[['_route' => 'game_app_game_getbydate', '_controller' => 'App\\Controller\\GameController::getByDate'], ['date'], ['GET' => 0], null, false, true, null]],
+        146 => [
+            [['_route' => 'league_app_league_getleague', '_controller' => 'App\\Controller\\LeagueController::getLeague'], ['id'], ['GET' => 0], null, false, true, null],
+            [['_route' => 'league_app_league_update', '_controller' => 'App\\Controller\\LeagueController::update'], ['id'], ['PUT' => 0], null, false, true, null],
+            [['_route' => 'league_app_league_delete', '_controller' => 'App\\Controller\\LeagueController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
-        427 => [[['_route' => '_api_/games/{id}{._format}_get', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Game', '_api_operation_name' => '_api_/games/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
-        450 => [[['_route' => '_api_/games{._format}_post', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Game', '_api_operation_name' => '_api_/games{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null]],
-        487 => [
-            [['_route' => '_api_/games/{id}{._format}_put', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Game', '_api_operation_name' => '_api_/games/{id}{._format}_put'], ['id', '_format'], ['PUT' => 0], null, false, true, null],
-            [['_route' => '_api_/games/{id}{._format}_delete', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Game', '_api_operation_name' => '_api_/games/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
+        177 => [
+            [['_route' => 'player_app_player_getplayer', '_controller' => 'App\\Controller\\PlayerController::getPlayer'], ['id'], ['GET' => 0], null, false, true, null],
+            [['_route' => 'player_app_player_update', '_controller' => 'App\\Controller\\PlayerController::update'], ['id'], ['PUT' => 0], null, false, true, null],
+            [['_route' => 'player_app_player_delete', '_controller' => 'App\\Controller\\PlayerController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
-        511 => [[['_route' => '_api_/games{._format}_get_collection', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Game', '_api_operation_name' => '_api_/games{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null]],
-        556 => [[['_route' => '_api_/leagues/{id}{._format}_get', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\League', '_api_operation_name' => '_api_/leagues/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
-        582 => [
-            [['_route' => '_api_/leagues{._format}_get_collection', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\League', '_api_operation_name' => '_api_/leagues{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null],
-            [['_route' => '_api_/leagues{._format}_post', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\League', '_api_operation_name' => '_api_/leagues{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null],
+        210 => [
+            [['_route' => 'player_history_app_playerhistory_getplayerhistory', '_controller' => 'App\\Controller\\PlayerHistoryController::getPlayerHistory'], ['id'], ['GET' => 0], null, false, true, null],
+            [['_route' => 'player_history_app_playerhistory_update', '_controller' => 'App\\Controller\\PlayerHistoryController::update'], ['id'], ['PUT' => 0], null, false, true, null],
+            [['_route' => 'player_history_app_playerhistory_delete', '_controller' => 'App\\Controller\\PlayerHistoryController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
-        620 => [
-            [['_route' => '_api_/leagues/{id}{._format}_patch', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\League', '_api_operation_name' => '_api_/leagues/{id}{._format}_patch'], ['id', '_format'], ['PATCH' => 0], null, false, true, null],
-            [['_route' => '_api_/leagues/{id}{._format}_delete', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\League', '_api_operation_name' => '_api_/leagues/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
+        236 => [
+            [['_route' => 'player_stats_app_playerstats_getplayerstats', '_controller' => 'App\\Controller\\PlayerStatsController::getPlayerStats'], ['id'], ['GET' => 0], null, false, true, null],
+            [['_route' => 'player_stats_app_playerstats_update', '_controller' => 'App\\Controller\\PlayerStatsController::update'], ['id'], ['PUT' => 0], null, false, true, null],
+            [['_route' => 'player_stats_app_playerstats_delete', '_controller' => 'App\\Controller\\PlayerStatsController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
-        677 => [[['_route' => '_api_/match_has_referees/{id}{._format}_get', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\MatchHasReferees', '_api_operation_name' => '_api_/match_has_referees/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
-        703 => [
-            [['_route' => '_api_/match_has_referees{._format}_get_collection', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\MatchHasReferees', '_api_operation_name' => '_api_/match_has_referees{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null],
-            [['_route' => '_api_/match_has_referees{._format}_post', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\MatchHasReferees', '_api_operation_name' => '_api_/match_has_referees{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null],
+        267 => [
+            [['_route' => 'referee_app_referee_getreferee', '_controller' => 'App\\Controller\\RefereeController::getReferee'], ['id'], ['GET' => 0], null, false, true, null],
+            [['_route' => 'referee_app_referee_update', '_controller' => 'App\\Controller\\RefereeController::update'], ['id'], ['PUT' => 0], null, false, true, null],
+            [['_route' => 'referee_app_referee_delete', '_controller' => 'App\\Controller\\RefereeController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
-        741 => [
-            [['_route' => '_api_/match_has_referees/{id}{._format}_patch', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\MatchHasReferees', '_api_operation_name' => '_api_/match_has_referees/{id}{._format}_patch'], ['id', '_format'], ['PATCH' => 0], null, false, true, null],
-            [['_route' => '_api_/match_has_referees/{id}{._format}_delete', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\MatchHasReferees', '_api_operation_name' => '_api_/match_has_referees/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
+        298 => [
+            [['_route' => 'season_app_season_getseason', '_controller' => 'App\\Controller\\SeasonController::getSeason'], ['id'], ['GET' => 0], null, false, true, null],
+            [['_route' => 'season_app_season_update', '_controller' => 'App\\Controller\\SeasonController::update'], ['id'], ['PUT' => 0], null, false, true, null],
+            [['_route' => 'season_app_season_delete', '_controller' => 'App\\Controller\\SeasonController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
-        790 => [[['_route' => '_api_/players/{id}{._format}_get', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Player', '_api_operation_name' => '_api_/players/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
-        816 => [
-            [['_route' => '_api_/players{._format}_get_collection', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Player', '_api_operation_name' => '_api_/players{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null],
-            [['_route' => '_api_/players{._format}_post', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Player', '_api_operation_name' => '_api_/players{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null],
+        324 => [
+            [['_route' => 'sport_app_sport_getsport', '_controller' => 'App\\Controller\\SportController::getSport'], ['id'], ['GET' => 0], null, false, true, null],
+            [['_route' => 'sport_app_sport_update', '_controller' => 'App\\Controller\\SportController::update'], ['id'], ['PUT' => 0], null, false, true, null],
+            [['_route' => 'sport_app_sport_delete', '_controller' => 'App\\Controller\\SportController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
-        854 => [
-            [['_route' => '_api_/players/{id}{._format}_patch', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Player', '_api_operation_name' => '_api_/players/{id}{._format}_patch'], ['id', '_format'], ['PATCH' => 0], null, false, true, null],
-            [['_route' => '_api_/players/{id}{._format}_delete', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Player', '_api_operation_name' => '_api_/players/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
+        352 => [
+            [['_route' => 'stadium_app_stadium_getstadium', '_controller' => 'App\\Controller\\StadiumController::getStadium'], ['id'], ['GET' => 0], null, false, true, null],
+            [['_route' => 'stadium_app_stadium_update', '_controller' => 'App\\Controller\\StadiumController::update'], ['id'], ['PUT' => 0], null, false, true, null],
+            [['_route' => 'stadium_app_stadium_delete', '_controller' => 'App\\Controller\\StadiumController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
-        906 => [[['_route' => '_api_/player_histories/{id}{._format}_get', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\PlayerHistory', '_api_operation_name' => '_api_/player_histories/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
-        932 => [
-            [['_route' => '_api_/player_histories{._format}_get_collection', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\PlayerHistory', '_api_operation_name' => '_api_/player_histories{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null],
-            [['_route' => '_api_/player_histories{._format}_post', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\PlayerHistory', '_api_operation_name' => '_api_/player_histories{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null],
+        379 => [
+            [['_route' => 'team_app_team_getteam', '_controller' => 'App\\Controller\\TeamController::getTeam'], ['id'], ['GET' => 0], null, false, true, null],
+            [['_route' => 'team_app_team_update', '_controller' => 'App\\Controller\\TeamController::update'], ['id'], ['PUT' => 0], null, false, true, null],
+            [['_route' => 'team_app_team_delete', '_controller' => 'App\\Controller\\TeamController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
-        970 => [
-            [['_route' => '_api_/player_histories/{id}{._format}_patch', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\PlayerHistory', '_api_operation_name' => '_api_/player_histories/{id}{._format}_patch'], ['id', '_format'], ['PATCH' => 0], null, false, true, null],
-            [['_route' => '_api_/player_histories/{id}{._format}_delete', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\PlayerHistory', '_api_operation_name' => '_api_/player_histories/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
+        408 => [
+            [['_route' => 'user_app_user_update', '_controller' => 'App\\Controller\\UserController::update'], ['id'], ['PUT' => 0], null, false, true, null],
+            [['_route' => 'user_app_user_delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
-        1014 => [[['_route' => '_api_/player_stats/{id}{._format}_get', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\PlayerStats', '_api_operation_name' => '_api_/player_stats/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
-        1041 => [
-            [['_route' => '_api_/player_stats{._format}_get_collection', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\PlayerStats', '_api_operation_name' => '_api_/player_stats{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null],
-            [['_route' => '_api_/player_stats{._format}_post', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\PlayerStats', '_api_operation_name' => '_api_/player_stats{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null],
-        ],
-        1080 => [
-            [['_route' => '_api_/player_stats/{id}{._format}_patch', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\PlayerStats', '_api_operation_name' => '_api_/player_stats/{id}{._format}_patch'], ['id', '_format'], ['PATCH' => 0], null, false, true, null],
-            [['_route' => '_api_/player_stats/{id}{._format}_delete', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\PlayerStats', '_api_operation_name' => '_api_/player_stats/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
-        ],
-        1130 => [[['_route' => '_api_/referees/{id}{._format}_get', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Referee', '_api_operation_name' => '_api_/referees/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
-        1157 => [
-            [['_route' => '_api_/referees{._format}_get_collection', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Referee', '_api_operation_name' => '_api_/referees{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null],
-            [['_route' => '_api_/referees{._format}_post', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Referee', '_api_operation_name' => '_api_/referees{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null],
-        ],
-        1196 => [
-            [['_route' => '_api_/referees/{id}{._format}_patch', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Referee', '_api_operation_name' => '_api_/referees/{id}{._format}_patch'], ['id', '_format'], ['PATCH' => 0], null, false, true, null],
-            [['_route' => '_api_/referees/{id}{._format}_delete', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Referee', '_api_operation_name' => '_api_/referees/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
-        ],
-        1246 => [[['_route' => '_api_/seasons/{id}{._format}_get', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Season', '_api_operation_name' => '_api_/seasons/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
-        1273 => [
-            [['_route' => '_api_/seasons{._format}_get_collection', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Season', '_api_operation_name' => '_api_/seasons{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null],
-            [['_route' => '_api_/seasons{._format}_post', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Season', '_api_operation_name' => '_api_/seasons{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null],
-        ],
-        1312 => [
-            [['_route' => '_api_/seasons/{id}{._format}_patch', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Season', '_api_operation_name' => '_api_/seasons/{id}{._format}_patch'], ['id', '_format'], ['PATCH' => 0], null, false, true, null],
-            [['_route' => '_api_/seasons/{id}{._format}_delete', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Season', '_api_operation_name' => '_api_/seasons/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
-        ],
-        1357 => [[['_route' => '_api_/sports/{id}{._format}_get', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Sport', '_api_operation_name' => '_api_/sports/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
-        1384 => [
-            [['_route' => '_api_/sports{._format}_get_collection', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Sport', '_api_operation_name' => '_api_/sports{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null],
-            [['_route' => '_api_/sports{._format}_post', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Sport', '_api_operation_name' => '_api_/sports{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null],
-        ],
-        1423 => [
-            [['_route' => '_api_/sports/{id}{._format}_patch', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Sport', '_api_operation_name' => '_api_/sports/{id}{._format}_patch'], ['id', '_format'], ['PATCH' => 0], null, false, true, null],
-            [['_route' => '_api_/sports/{id}{._format}_delete', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Sport', '_api_operation_name' => '_api_/sports/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
-        ],
-        1468 => [[['_route' => '_api_/stadia/{id}{._format}_get', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Stadium', '_api_operation_name' => '_api_/stadia/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
-        1495 => [
-            [['_route' => '_api_/stadia{._format}_get_collection', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Stadium', '_api_operation_name' => '_api_/stadia{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null],
-            [['_route' => '_api_/stadia{._format}_post', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Stadium', '_api_operation_name' => '_api_/stadia{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null],
-        ],
-        1534 => [
-            [['_route' => '_api_/stadia/{id}{._format}_patch', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Stadium', '_api_operation_name' => '_api_/stadia/{id}{._format}_patch'], ['id', '_format'], ['PATCH' => 0], null, false, true, null],
-            [['_route' => '_api_/stadia/{id}{._format}_delete', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Stadium', '_api_operation_name' => '_api_/stadia/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
-        ],
-        1580 => [[['_route' => '_api_/teams/{id}{._format}_get', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Team', '_api_operation_name' => '_api_/teams/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
-        1607 => [
-            [['_route' => '_api_/teams{._format}_get_collection', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Team', '_api_operation_name' => '_api_/teams{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null],
-            [['_route' => '_api_/teams{._format}_post', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Team', '_api_operation_name' => '_api_/teams{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null],
-        ],
-        1646 => [
-            [['_route' => '_api_/teams/{id}{._format}_patch', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Team', '_api_operation_name' => '_api_/teams/{id}{._format}_patch'], ['id', '_format'], ['PATCH' => 0], null, false, true, null],
-            [['_route' => '_api_/teams/{id}{._format}_delete', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\Team', '_api_operation_name' => '_api_/teams/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
-        ],
-        1694 => [[['_route' => '_api_/users/{id}{._format}_get', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\User', '_api_operation_name' => '_api_/users/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
-        1718 => [[['_route' => '_api_/users{._format}_post', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\User', '_api_operation_name' => '_api_/users{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null]],
-        1756 => [
-            [['_route' => '_api_/users/{id}{._format}_put', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\User', '_api_operation_name' => '_api_/users/{id}{._format}_put'], ['id', '_format'], ['PUT' => 0], null, false, true, null],
-            [['_route' => '_api_/users/{id}{._format}_delete', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\User', '_api_operation_name' => '_api_/users/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
-        ],
-        1781 => [[['_route' => '_api_/users{._format}_get_collection', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\User', '_api_operation_name' => '_api_/users{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null]],
-        1839 => [[['_route' => '_api_/user_has_favorite_teams/{id}{._format}_get', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\UserHasFavoriteTeam', '_api_operation_name' => '_api_/user_has_favorite_teams/{id}{._format}_get'], ['id', '_format'], ['GET' => 0], null, false, true, null]],
-        1866 => [
-            [['_route' => '_api_/user_has_favorite_teams{._format}_get_collection', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\UserHasFavoriteTeam', '_api_operation_name' => '_api_/user_has_favorite_teams{._format}_get_collection'], ['_format'], ['GET' => 0], null, false, true, null],
-            [['_route' => '_api_/user_has_favorite_teams{._format}_post', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\UserHasFavoriteTeam', '_api_operation_name' => '_api_/user_has_favorite_teams{._format}_post'], ['_format'], ['POST' => 0], null, false, true, null],
-        ],
-        1905 => [
-            [['_route' => '_api_/user_has_favorite_teams/{id}{._format}_patch', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\UserHasFavoriteTeam', '_api_operation_name' => '_api_/user_has_favorite_teams/{id}{._format}_patch'], ['id', '_format'], ['PATCH' => 0], null, false, true, null],
-            [['_route' => '_api_/user_has_favorite_teams/{id}{._format}_delete', '_controller' => 'api_platform.symfony.main_controller', '_format' => null, '_stateless' => true, '_api_resource_class' => 'App\\Entity\\UserHasFavoriteTeam', '_api_operation_name' => '_api_/user_has_favorite_teams/{id}{._format}_delete'], ['id', '_format'], ['DELETE' => 0], null, false, true, null],
-        ],
-        1947 => [
-            [['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null],
+        433 => [[['_route' => 'user_app_user_changepassword', '_controller' => 'App\\Controller\\UserController::changePassword'], ['id'], ['POST' => 0], null, false, false, null]],
+        458 => [
+            [['_route' => 'user_app_user_forgotpassword', '_controller' => 'App\\Controller\\UserController::forgotPassword'], [], ['POST' => 0], null, false, false, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

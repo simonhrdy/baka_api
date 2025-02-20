@@ -1,0 +1,16 @@
+nelmio_api_doc:
+  documentation:
+    info:
+      title: "API Dokumentace"
+      description: "API k bakálářské práci SportMatter<br> @Šimon Hrdý 2025"
+      version: "1.0.0"
+    components:
+      securitySchemes:
+        BearerAuth:
+          type: http
+          scheme: bearer
+    security:
+      - BearerAuth: []
+    use_validation_groups: true
+
+

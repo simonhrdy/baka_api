@@ -2,16 +2,11 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\MatchHasRefereesRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MatchHasRefereesRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups' => ['match_read']],
-    denormalizationContext: ['groups' => ['match_write']]
-)]
 class MatchHasReferees
 {
     #[ORM\Id]

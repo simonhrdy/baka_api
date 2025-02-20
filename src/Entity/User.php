@@ -2,12 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Put;
-use App\Controller\AuthController;
-use App\Controller\AuthControllerAdmin;
+use App\Controller\UserController;
 use App\DTO\LoginRequest;
 use App\DTO\LoginResponse;
 use App\Enum\Role;
@@ -16,33 +11,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Operation;
-use PhpParser\Builder\Enum_;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Ignore;
+use OpenApi\Attributes as OA;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ApiResource(operations: [
-    new Get(),
-    new Post(),
-    new Put(),
-    new Delete(),
-    new GetCollection(),
-    new Post(uriTemplate: '/login',
-        formats: ['json' => ['application/json']],
-        controller: AuthController::class,
-        shortName: 'Login',
-        description: 'Login as user',
-        input: LoginRequest::class,
-        output: LoginResponse::class,
-        name: 'LoginUser',
-    )
-])]
-class User  implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -56,10 +32,11 @@ class User  implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Ignore]
     private ?string $password = null;
 
-    #[ORM\Column(enumType: Role::class)]
-    private Role $role;
+    #[ORM\Column(type: "json")]
+    private array $roles = [];
 
     /**
      * @var Collection<int, Game>
@@ -120,20 +97,20 @@ class User  implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = password_hash($password, PASSWORD_DEFAULT);
     }
 
-    public function getRole(): Role
-    {
-        return $this->role;
-    }
-
-    public function setRole(Role $role): self
-    {
-        $this->role = $role;
-        return $this;
-    }
-
     public function getRoles(): array
     {
-        return [$this->role->value];
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     public function eraseCredentials(): void

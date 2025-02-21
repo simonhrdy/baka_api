@@ -18,6 +18,33 @@ class TeamController extends AbstractController
     #[OA\Response(
         response: 200,
         description: 'Successful response',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(
+                properties: [
+                    new OA\Property(property: 'id', type: 'integer', example: 1),
+                    new OA\Property(property: 'name', type: 'string', example: 'Arsenal'),
+                    new OA\Property(property: 'surname', type: 'string', example: null, nullable: true),
+                    new OA\Property(property: 'coach', type: 'string', example: 'DSAD'),
+                    new OA\Property(property: 'image_src', type: 'string', example: 'dsada'),
+                    new OA\Property(property: 'short_name', type: 'string', example: 'ARS'),
+                    new OA\Property(
+                        property: 'stadium_id',
+                        properties: [
+                            new OA\Property(property: 'id', type: 'integer', example: 1),
+                            new OA\Property(property: 'name', type: 'string', example: 'dasfas'),
+                            new OA\Property(property: 'capacity', type: 'integer', example: 121),
+                        ],
+                        type: 'object'
+                    ),
+                    new OA\Property(property: 'players', type: 'array', items: new OA\Items(type: 'object')),
+                    new OA\Property(property: 'playerHistories', type: 'array', items: new OA\Items(type: 'object')),
+                    new OA\Property(property: 'gamesHome', type: 'array', items: new OA\Items(type: 'object')),
+                    new OA\Property(property: 'gamesAway', type: 'array', items: new OA\Items(type: 'object')),
+                ],
+                type: 'object'
+            )
+        )
     )]
     #[OA\Tag(name: 'Team')]
     public function list(EntityManagerInterface $entityManager): JsonResponse
@@ -30,6 +57,30 @@ class TeamController extends AbstractController
     #[OA\Response(
         response: 200,
         description: 'Successful response',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'id', type: 'integer', example: 1),
+                new OA\Property(property: 'name', type: 'string', example: 'Arsenal'),
+                new OA\Property(property: 'surname', type: 'string', example: null, nullable: true),
+                new OA\Property(property: 'coach', type: 'string', example: 'DSAD'),
+                new OA\Property(property: 'image_src', type: 'string', example: 'dsada'),
+                new OA\Property(property: 'short_name', type: 'string', example: 'ARS'),
+                new OA\Property(
+                    property: 'stadium_id',
+                    properties: [
+                        new OA\Property(property: 'id', type: 'integer', example: 1),
+                        new OA\Property(property: 'name', type: 'string', example: 'dasfas'),
+                        new OA\Property(property: 'capacity', type: 'integer', example: 121),
+                    ],
+                    type: 'object'
+                ),
+                new OA\Property(property: 'players', type: 'array', items: new OA\Items(type: 'object')),
+                new OA\Property(property: 'playerHistories', type: 'array', items: new OA\Items(type: 'object')),
+                new OA\Property(property: 'gamesHome', type: 'array', items: new OA\Items(type: 'object')),
+                new OA\Property(property: 'gamesAway', type: 'array', items: new OA\Items(type: 'object')),
+            ],
+            type: 'object'
+        )
     )]
     #[OA\Tag(name: 'Team')]
     public function getTeam(Team $team): JsonResponse

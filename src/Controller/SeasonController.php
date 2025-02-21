@@ -10,31 +10,60 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+
 
 #[Route('/seasons', name: 'season_')]
 class SeasonController extends AbstractController
 {
     #[Route('', methods: ['GET'])]
+    #[OA\Tag(name: 'Season')]
     #[OA\Response(
         response: 200,
         description: 'Get all seasons',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(
+                properties: [
+                    new OA\Property(property: 'id', type: 'integer', example: 1),
+                    new OA\Property(property: 'is_active', type: 'boolean', example: true),
+                    new OA\Property(property: 'yearEnd', type: 'string', format: 'date-time', example: '2025-02-21T15:26:40+00:00'),
+                    new OA\Property(property: 'yearStart', type: 'string', format: 'date-time', example: '2025-01-21T15:26:47+00:00'),
+                    new OA\Property(property: 'league_id', type: 'array', items: new OA\Items(type: 'object')),
+                    new OA\Property(property: 'seasonHasTeams', type: 'array', items: new OA\Items(type: 'object')),
+                ]
+            )
+        )
     )]
-    #[OA\Tag(name: 'Season')]
-    public function list(EntityManagerInterface $entityManager): JsonResponse
+    public function list(EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
         $seasons = $entityManager->getRepository(Season::class)->findAll();
-        return $this->json($seasons, 200);
+        $json = $serializer->serialize($seasons, 'json', ['groups' => 'season:list']);
+
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('/{id}', methods: ['GET'])]
     #[OA\Response(
         response: 200,
         description: 'Get a season by ID',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'id', type: 'integer', example: 1),
+                new OA\Property(property: 'is_active', type: 'boolean', example: true),
+                new OA\Property(property: 'yearEnd', type: 'string', format: 'date-time', example: '2025-02-21T15:26:40+00:00'),
+                new OA\Property(property: 'yearStart', type: 'string', format: 'date-time', example: '2025-01-21T15:26:47+00:00'),
+                new OA\Property(property: 'league_id', type: 'array', items: new OA\Items(type: 'object')),
+                new OA\Property(property: 'seasonHasTeams', type: 'array', items: new OA\Items(type: 'object')),
+            ],
+            type: 'object'
+        )
     )]
     #[OA\Tag(name: 'Season')]
-    public function getSeason(Season $season): JsonResponse
+    public function getSeason(Season $season, SerializerInterface $serializer): JsonResponse
     {
-        return $this->json($season, 200);
+        $json = $serializer->serialize($season, 'json', ['groups' => 'season:list']);
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('', methods: ['POST'])]

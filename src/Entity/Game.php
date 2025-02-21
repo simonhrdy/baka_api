@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 class Game
@@ -16,32 +17,41 @@ class Game
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['game:list'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'games')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['game:list'])]
     private ?Team $home_team_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'games')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['game:list'])]
     private ?Team $away_team_id = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['game:list'])]
     private ?int $lap = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['game:list'])]
     private ?array $parametrs = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['game:list'])]
     private DateTimeInterface $date_of_game;
 
     #[ORM\ManyToOne(inversedBy: 'games')]
+    #[Groups(['game:list'])]
     private ?User $superviser_id = null;
 
     #[ORM\OneToMany(targetEntity: MatchHasReferees::class, mappedBy: 'game')]
+    #[Groups(['game:list'])]
     private Collection $game;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Groups(['game:list'])]
     private ?League $league_id = null;
 
     public function __construct()

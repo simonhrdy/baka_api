@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SeasonRepository::class)]
 class Season
@@ -14,24 +15,30 @@ class Season
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['season:list'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['season:list'])]
     private ?bool $is_active = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['season:list'])]
     private ?\DateTimeInterface $yearEnd = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['season:list'])]
     private ?\DateTimeInterface $yearStart = null;
 
     #[ORM\ManyToOne(inversedBy: 'seasons')]
+    #[Groups(['season:list'])]
     private ?League $league_id = null;
 
     /**
      * @var Collection<int, SeasonHasTeams>
      */
     #[ORM\OneToMany(targetEntity: SeasonHasTeams::class, mappedBy: 'season_id')]
+    #[Groups(['season:list'])]
     private Collection $seasonHasTeams;
 
     public function __construct()

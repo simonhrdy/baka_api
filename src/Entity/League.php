@@ -6,6 +6,7 @@ use App\Repository\LeagueRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LeagueRepository::class)]
 class League
@@ -13,24 +14,30 @@ class League
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['league:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['league:list'])]
     private ?string $assocation = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['league:list'])]
     private ?string $name = null;
 
     #[ORM\OneToOne(inversedBy: 'league', cascade: ['persist', 'remove'])]
+    #[Groups(['league:list'])]
     private ?Country $country_id = null;
 
     #[ORM\OneToOne(inversedBy: 'league', cascade: ['persist', 'remove'])]
+    #[Groups(['league:list'])]
     private ?Sport $sport_id = null;
 
     /**
      * @var Collection<int, Season>
      */
     #[ORM\OneToMany(targetEntity: Season::class, mappedBy: 'league_id')]
+    #[Groups(['league:list'])]
     private Collection $seasons;
 
     public function __construct()

@@ -18,7 +18,16 @@ class StadiumController extends AbstractController
     #[OA\Response(
         response: 200,
         description: 'List all stadiums',
-        content: new Model(type: Stadium::class)
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(
+                properties: [
+                    new OA\Property(property: 'id', type: 'integer', example: 1),
+                    new OA\Property(property: 'name', type: 'string', example: 'dasfas'),
+                    new OA\Property(property: 'capacity', type: 'integer', example: 121),
+                ]
+            )
+        )
     )]
     #[OA\Tag(name: 'Stadium')]
     public function list(EntityManagerInterface $entityManager): JsonResponse

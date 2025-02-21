@@ -437,7 +437,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.mjaLkGJ"/>
+      <argument type="service" id=".service_locator.f94PFgx"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -1718,7 +1718,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.mjaLkGJ"/>
+      <argument type="service" id=".service_locator.f94PFgx"/>
     </service>
     <service id="routing.resolver" class="Symfony\Component\Config\Loader\LoaderResolver">
       <call method="addLoader">
@@ -5747,23 +5747,31 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.6ouE8zq" method="withContext"/>
     </service>
-    <service id=".service_locator.P.blNFL.App\Controller\GameController::list()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Lnv_epI" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="serializer" type="service_closure" id="serializer"/>
+      </argument>
+    </service>
+    <service id=".service_locator.Lnv_epI.App\Controller\GameController::list()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\GameController::list()"/>
       <argument>App\Controller\GameController::list()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.P.blNFL" method="withContext"/>
+      <factory service=".service_locator.Lnv_epI" method="withContext"/>
     </service>
-    <service id=".service_locator.WQVGjS2" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.ZYDYYK6" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="game" type="service_closure" id=".errored..service_locator.WQVGjS2.App\Entity\Game"/>
+        <argument key="game" type="service_closure" id=".errored..service_locator.ZYDYYK6.App\Entity\Game"/>
+        <argument key="serializer" type="service_closure" id="serializer"/>
       </argument>
     </service>
-    <service id=".service_locator.WQVGjS2.App\Controller\GameController::getGame()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.ZYDYYK6.App\Controller\GameController::getGame()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\GameController::getGame()"/>
       <argument>App\Controller\GameController::getGame()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.WQVGjS2" method="withContext"/>
+      <factory service=".service_locator.ZYDYYK6" method="withContext"/>
     </service>
     <service id=".service_locator.P.blNFL.App\Controller\GameController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\GameController::create()"/>
@@ -5802,23 +5810,24 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.pnT1m7p" method="withContext"/>
     </service>
-    <service id=".service_locator.P.blNFL.App\Controller\LeagueController::list()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Lnv_epI.App\Controller\LeagueController::list()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\LeagueController::list()"/>
       <argument>App\Controller\LeagueController::list()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.P.blNFL" method="withContext"/>
+      <factory service=".service_locator.Lnv_epI" method="withContext"/>
     </service>
-    <service id=".service_locator.orDyv_R" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.PQMDegY" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="league" type="service_closure" id=".errored..service_locator.orDyv_R.App\Entity\League"/>
+        <argument key="league" type="service_closure" id=".errored..service_locator.PQMDegY.App\Entity\League"/>
+        <argument key="serializer" type="service_closure" id="serializer"/>
       </argument>
     </service>
-    <service id=".service_locator.orDyv_R.App\Controller\LeagueController::getLeague()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.PQMDegY.App\Controller\LeagueController::getLeague()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\LeagueController::getLeague()"/>
       <argument>App\Controller\LeagueController::getLeague()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.orDyv_R" method="withContext"/>
+      <factory service=".service_locator.PQMDegY" method="withContext"/>
     </service>
     <service id=".service_locator.P.blNFL.App\Controller\LeagueController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\LeagueController::create()"/>
@@ -5974,23 +5983,24 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.6gZypo7" method="withContext"/>
     </service>
-    <service id=".service_locator.P.blNFL.App\Controller\RefereeController::list()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Lnv_epI.App\Controller\RefereeController::list()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\RefereeController::list()"/>
       <argument>App\Controller\RefereeController::list()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.P.blNFL" method="withContext"/>
+      <factory service=".service_locator.Lnv_epI" method="withContext"/>
     </service>
-    <service id=".service_locator.hUIigMv" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.3tqxdNz" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="referee" type="service_closure" id=".errored..service_locator.hUIigMv.App\Entity\Referee"/>
+        <argument key="referee" type="service_closure" id=".errored..service_locator.3tqxdNz.App\Entity\Referee"/>
+        <argument key="serializer" type="service_closure" id="serializer"/>
       </argument>
     </service>
-    <service id=".service_locator.hUIigMv.App\Controller\RefereeController::getReferee()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.3tqxdNz.App\Controller\RefereeController::getReferee()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\RefereeController::getReferee()"/>
       <argument>App\Controller\RefereeController::getReferee()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.hUIigMv" method="withContext"/>
+      <factory service=".service_locator.3tqxdNz" method="withContext"/>
     </service>
     <service id=".service_locator.P.blNFL.App\Controller\RefereeController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\RefereeController::create()"/>
@@ -6017,23 +6027,24 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.l6oBZ.1" method="withContext"/>
     </service>
-    <service id=".service_locator.P.blNFL.App\Controller\SeasonController::list()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Lnv_epI.App\Controller\SeasonController::list()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SeasonController::list()"/>
       <argument>App\Controller\SeasonController::list()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.P.blNFL" method="withContext"/>
+      <factory service=".service_locator.Lnv_epI" method="withContext"/>
     </service>
-    <service id=".service_locator.JTDwdNm" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.VeIdmon" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="season" type="service_closure" id=".errored..service_locator.JTDwdNm.App\Entity\Season"/>
+        <argument key="season" type="service_closure" id=".errored..service_locator.VeIdmon.App\Entity\Season"/>
+        <argument key="serializer" type="service_closure" id="serializer"/>
       </argument>
     </service>
-    <service id=".service_locator.JTDwdNm.App\Controller\SeasonController::getSeason()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.VeIdmon.App\Controller\SeasonController::getSeason()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SeasonController::getSeason()"/>
       <argument>App\Controller\SeasonController::getSeason()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.JTDwdNm" method="withContext"/>
+      <factory service=".service_locator.VeIdmon" method="withContext"/>
     </service>
     <service id=".service_locator.P.blNFL.App\Controller\SeasonController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SeasonController::create()"/>
@@ -6232,7 +6243,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.P.blNFL" method="withContext"/>
     </service>
-    <service id=".service_locator.mjaLkGJ" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.f94PFgx" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.4wc4Ag1.kernel::registerContainerConfiguration()"/>
@@ -6244,14 +6255,14 @@
         <argument key="App\Controller\CountryController::create" type="service_closure" id=".service_locator.P.blNFL.App\Controller\CountryController::create()"/>
         <argument key="App\Controller\CountryController::update" type="service_closure" id=".service_locator.6ouE8zq.App\Controller\CountryController::update()"/>
         <argument key="App\Controller\CountryController::delete" type="service_closure" id=".service_locator.6ouE8zq.App\Controller\CountryController::delete()"/>
-        <argument key="App\Controller\GameController::list" type="service_closure" id=".service_locator.P.blNFL.App\Controller\GameController::list()"/>
-        <argument key="App\Controller\GameController::getGame" type="service_closure" id=".service_locator.WQVGjS2.App\Controller\GameController::getGame()"/>
+        <argument key="App\Controller\GameController::list" type="service_closure" id=".service_locator.Lnv_epI.App\Controller\GameController::list()"/>
+        <argument key="App\Controller\GameController::getGame" type="service_closure" id=".service_locator.ZYDYYK6.App\Controller\GameController::getGame()"/>
         <argument key="App\Controller\GameController::create" type="service_closure" id=".service_locator.P.blNFL.App\Controller\GameController::create()"/>
         <argument key="App\Controller\GameController::update" type="service_closure" id=".service_locator.yh.BtHh.App\Controller\GameController::update()"/>
         <argument key="App\Controller\GameController::delete" type="service_closure" id=".service_locator.yh.BtHh.App\Controller\GameController::delete()"/>
         <argument key="App\Controller\GameController::getByDate" type="service_closure" id=".service_locator.pnT1m7p.App\Controller\GameController::getByDate()"/>
-        <argument key="App\Controller\LeagueController::list" type="service_closure" id=".service_locator.P.blNFL.App\Controller\LeagueController::list()"/>
-        <argument key="App\Controller\LeagueController::getLeague" type="service_closure" id=".service_locator.orDyv_R.App\Controller\LeagueController::getLeague()"/>
+        <argument key="App\Controller\LeagueController::list" type="service_closure" id=".service_locator.Lnv_epI.App\Controller\LeagueController::list()"/>
+        <argument key="App\Controller\LeagueController::getLeague" type="service_closure" id=".service_locator.PQMDegY.App\Controller\LeagueController::getLeague()"/>
         <argument key="App\Controller\LeagueController::create" type="service_closure" id=".service_locator.P.blNFL.App\Controller\LeagueController::create()"/>
         <argument key="App\Controller\LeagueController::update" type="service_closure" id=".service_locator.ZKf94C1.App\Controller\LeagueController::update()"/>
         <argument key="App\Controller\LeagueController::delete" type="service_closure" id=".service_locator.ZKf94C1.App\Controller\LeagueController::delete()"/>
@@ -6270,13 +6281,13 @@
         <argument key="App\Controller\PlayerStatsController::create" type="service_closure" id=".service_locator.P.blNFL.App\Controller\PlayerStatsController::create()"/>
         <argument key="App\Controller\PlayerStatsController::update" type="service_closure" id=".service_locator.6gZypo7.App\Controller\PlayerStatsController::update()"/>
         <argument key="App\Controller\PlayerStatsController::delete" type="service_closure" id=".service_locator.6gZypo7.App\Controller\PlayerStatsController::delete()"/>
-        <argument key="App\Controller\RefereeController::list" type="service_closure" id=".service_locator.P.blNFL.App\Controller\RefereeController::list()"/>
-        <argument key="App\Controller\RefereeController::getReferee" type="service_closure" id=".service_locator.hUIigMv.App\Controller\RefereeController::getReferee()"/>
+        <argument key="App\Controller\RefereeController::list" type="service_closure" id=".service_locator.Lnv_epI.App\Controller\RefereeController::list()"/>
+        <argument key="App\Controller\RefereeController::getReferee" type="service_closure" id=".service_locator.3tqxdNz.App\Controller\RefereeController::getReferee()"/>
         <argument key="App\Controller\RefereeController::create" type="service_closure" id=".service_locator.P.blNFL.App\Controller\RefereeController::create()"/>
         <argument key="App\Controller\RefereeController::update" type="service_closure" id=".service_locator.l6oBZ.1.App\Controller\RefereeController::update()"/>
         <argument key="App\Controller\RefereeController::delete" type="service_closure" id=".service_locator.l6oBZ.1.App\Controller\RefereeController::delete()"/>
-        <argument key="App\Controller\SeasonController::list" type="service_closure" id=".service_locator.P.blNFL.App\Controller\SeasonController::list()"/>
-        <argument key="App\Controller\SeasonController::getSeason" type="service_closure" id=".service_locator.JTDwdNm.App\Controller\SeasonController::getSeason()"/>
+        <argument key="App\Controller\SeasonController::list" type="service_closure" id=".service_locator.Lnv_epI.App\Controller\SeasonController::list()"/>
+        <argument key="App\Controller\SeasonController::getSeason" type="service_closure" id=".service_locator.VeIdmon.App\Controller\SeasonController::getSeason()"/>
         <argument key="App\Controller\SeasonController::create" type="service_closure" id=".service_locator.P.blNFL.App\Controller\SeasonController::create()"/>
         <argument key="App\Controller\SeasonController::update" type="service_closure" id=".service_locator.1ZHTQTz.App\Controller\SeasonController::update()"/>
         <argument key="App\Controller\SeasonController::delete" type="service_closure" id=".service_locator.1ZHTQTz.App\Controller\SeasonController::delete()"/>
@@ -6308,14 +6319,14 @@
         <argument key="App\Controller\CountryController:create" type="service_closure" id=".service_locator.P.blNFL.App\Controller\CountryController::create()"/>
         <argument key="App\Controller\CountryController:update" type="service_closure" id=".service_locator.6ouE8zq.App\Controller\CountryController::update()"/>
         <argument key="App\Controller\CountryController:delete" type="service_closure" id=".service_locator.6ouE8zq.App\Controller\CountryController::delete()"/>
-        <argument key="App\Controller\GameController:list" type="service_closure" id=".service_locator.P.blNFL.App\Controller\GameController::list()"/>
-        <argument key="App\Controller\GameController:getGame" type="service_closure" id=".service_locator.WQVGjS2.App\Controller\GameController::getGame()"/>
+        <argument key="App\Controller\GameController:list" type="service_closure" id=".service_locator.Lnv_epI.App\Controller\GameController::list()"/>
+        <argument key="App\Controller\GameController:getGame" type="service_closure" id=".service_locator.ZYDYYK6.App\Controller\GameController::getGame()"/>
         <argument key="App\Controller\GameController:create" type="service_closure" id=".service_locator.P.blNFL.App\Controller\GameController::create()"/>
         <argument key="App\Controller\GameController:update" type="service_closure" id=".service_locator.yh.BtHh.App\Controller\GameController::update()"/>
         <argument key="App\Controller\GameController:delete" type="service_closure" id=".service_locator.yh.BtHh.App\Controller\GameController::delete()"/>
         <argument key="App\Controller\GameController:getByDate" type="service_closure" id=".service_locator.pnT1m7p.App\Controller\GameController::getByDate()"/>
-        <argument key="App\Controller\LeagueController:list" type="service_closure" id=".service_locator.P.blNFL.App\Controller\LeagueController::list()"/>
-        <argument key="App\Controller\LeagueController:getLeague" type="service_closure" id=".service_locator.orDyv_R.App\Controller\LeagueController::getLeague()"/>
+        <argument key="App\Controller\LeagueController:list" type="service_closure" id=".service_locator.Lnv_epI.App\Controller\LeagueController::list()"/>
+        <argument key="App\Controller\LeagueController:getLeague" type="service_closure" id=".service_locator.PQMDegY.App\Controller\LeagueController::getLeague()"/>
         <argument key="App\Controller\LeagueController:create" type="service_closure" id=".service_locator.P.blNFL.App\Controller\LeagueController::create()"/>
         <argument key="App\Controller\LeagueController:update" type="service_closure" id=".service_locator.ZKf94C1.App\Controller\LeagueController::update()"/>
         <argument key="App\Controller\LeagueController:delete" type="service_closure" id=".service_locator.ZKf94C1.App\Controller\LeagueController::delete()"/>
@@ -6334,13 +6345,13 @@
         <argument key="App\Controller\PlayerStatsController:create" type="service_closure" id=".service_locator.P.blNFL.App\Controller\PlayerStatsController::create()"/>
         <argument key="App\Controller\PlayerStatsController:update" type="service_closure" id=".service_locator.6gZypo7.App\Controller\PlayerStatsController::update()"/>
         <argument key="App\Controller\PlayerStatsController:delete" type="service_closure" id=".service_locator.6gZypo7.App\Controller\PlayerStatsController::delete()"/>
-        <argument key="App\Controller\RefereeController:list" type="service_closure" id=".service_locator.P.blNFL.App\Controller\RefereeController::list()"/>
-        <argument key="App\Controller\RefereeController:getReferee" type="service_closure" id=".service_locator.hUIigMv.App\Controller\RefereeController::getReferee()"/>
+        <argument key="App\Controller\RefereeController:list" type="service_closure" id=".service_locator.Lnv_epI.App\Controller\RefereeController::list()"/>
+        <argument key="App\Controller\RefereeController:getReferee" type="service_closure" id=".service_locator.3tqxdNz.App\Controller\RefereeController::getReferee()"/>
         <argument key="App\Controller\RefereeController:create" type="service_closure" id=".service_locator.P.blNFL.App\Controller\RefereeController::create()"/>
         <argument key="App\Controller\RefereeController:update" type="service_closure" id=".service_locator.l6oBZ.1.App\Controller\RefereeController::update()"/>
         <argument key="App\Controller\RefereeController:delete" type="service_closure" id=".service_locator.l6oBZ.1.App\Controller\RefereeController::delete()"/>
-        <argument key="App\Controller\SeasonController:list" type="service_closure" id=".service_locator.P.blNFL.App\Controller\SeasonController::list()"/>
-        <argument key="App\Controller\SeasonController:getSeason" type="service_closure" id=".service_locator.JTDwdNm.App\Controller\SeasonController::getSeason()"/>
+        <argument key="App\Controller\SeasonController:list" type="service_closure" id=".service_locator.Lnv_epI.App\Controller\SeasonController::list()"/>
+        <argument key="App\Controller\SeasonController:getSeason" type="service_closure" id=".service_locator.VeIdmon.App\Controller\SeasonController::getSeason()"/>
         <argument key="App\Controller\SeasonController:create" type="service_closure" id=".service_locator.P.blNFL.App\Controller\SeasonController::create()"/>
         <argument key="App\Controller\SeasonController:update" type="service_closure" id=".service_locator.1ZHTQTz.App\Controller\SeasonController::update()"/>
         <argument key="App\Controller\SeasonController:delete" type="service_closure" id=".service_locator.1ZHTQTz.App\Controller\SeasonController::delete()"/>
@@ -6817,14 +6828,14 @@
     <service id=".errored..service_locator.6ouE8zq.App\Entity\Country" class="App\Entity\Country">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.6ouE8zq&quot;: it needs an instance of &quot;App\Entity\Country&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
-    <service id=".errored..service_locator.WQVGjS2.App\Entity\Game" class="App\Entity\Game">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.WQVGjS2&quot;: it needs an instance of &quot;App\Entity\Game&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    <service id=".errored..service_locator.ZYDYYK6.App\Entity\Game" class="App\Entity\Game">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.ZYDYYK6&quot;: it needs an instance of &quot;App\Entity\Game&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.yh.BtHh.App\Entity\Game" class="App\Entity\Game">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.yh.BtHh&quot;: it needs an instance of &quot;App\Entity\Game&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
-    <service id=".errored..service_locator.orDyv_R.App\Entity\League" class="App\Entity\League">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.orDyv_R&quot;: it needs an instance of &quot;App\Entity\League&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    <service id=".errored..service_locator.PQMDegY.App\Entity\League" class="App\Entity\League">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.PQMDegY&quot;: it needs an instance of &quot;App\Entity\League&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.ZKf94C1.App\Entity\League" class="App\Entity\League">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.ZKf94C1&quot;: it needs an instance of &quot;App\Entity\League&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
@@ -6847,14 +6858,14 @@
     <service id=".errored..service_locator.6gZypo7.App\Entity\PlayerStats" class="App\Entity\PlayerStats">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.6gZypo7&quot;: it needs an instance of &quot;App\Entity\PlayerStats&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
-    <service id=".errored..service_locator.hUIigMv.App\Entity\Referee" class="App\Entity\Referee">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.hUIigMv&quot;: it needs an instance of &quot;App\Entity\Referee&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    <service id=".errored..service_locator.3tqxdNz.App\Entity\Referee" class="App\Entity\Referee">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.3tqxdNz&quot;: it needs an instance of &quot;App\Entity\Referee&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.l6oBZ.1.App\Entity\Referee" class="App\Entity\Referee">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.l6oBZ.1&quot;: it needs an instance of &quot;App\Entity\Referee&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
-    <service id=".errored..service_locator.JTDwdNm.App\Entity\Season" class="App\Entity\Season">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.JTDwdNm&quot;: it needs an instance of &quot;App\Entity\Season&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    <service id=".errored..service_locator.VeIdmon.App\Entity\Season" class="App\Entity\Season">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.VeIdmon&quot;: it needs an instance of &quot;App\Entity\Season&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.1ZHTQTz.App\Entity\Season" class="App\Entity\Season">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.1ZHTQTz&quot;: it needs an instance of &quot;App\Entity\Season&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
@@ -7744,7 +7755,7 @@
     <service id="security.token_storage" alias="security.untracked_token_storage" public="true"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.pRu6x_4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.mjaLkGJ"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.f94PFgx"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.BxSdgVt"/>
     <service id="Psr\Log\LoggerInterface" alias="logger"/>
@@ -7764,10 +7775,11 @@
     <service id=".service_locator.4KsIGyf" alias=".service_locator.P.blNFL"/>
     <service id=".service_locator.e024pLo" alias=".service_locator.Ga2YqgV"/>
     <service id=".service_locator.gw6GIo2" alias=".service_locator.6ouE8zq"/>
-    <service id=".service_locator.gB7HtwF" alias=".service_locator.WQVGjS2"/>
+    <service id=".service_locator.DsDwFMy" alias=".service_locator.Lnv_epI"/>
+    <service id=".service_locator.8sHkyBT" alias=".service_locator.ZYDYYK6"/>
     <service id=".service_locator.FC31Suf" alias=".service_locator.yh.BtHh"/>
     <service id=".service_locator.CdpiLj4" alias=".service_locator.pnT1m7p"/>
-    <service id=".service_locator.KzTspXX" alias=".service_locator.orDyv_R"/>
+    <service id=".service_locator..XoPzOc" alias=".service_locator.PQMDegY"/>
     <service id=".service_locator.QBSYtgI" alias=".service_locator.ZKf94C1"/>
     <service id=".service_locator.b4s6NMP" alias=".service_locator.vSzgaud"/>
     <service id=".service_locator.gjhH_sW" alias=".service_locator.MSzna8D"/>
@@ -7775,9 +7787,9 @@
     <service id=".service_locator.J8VfuyC" alias=".service_locator.67Lrj0G"/>
     <service id=".service_locator.okzaCMC" alias=".service_locator.3H2dEZZ"/>
     <service id=".service_locator.pzhxUUo" alias=".service_locator.6gZypo7"/>
-    <service id=".service_locator.FCSAYje" alias=".service_locator.hUIigMv"/>
+    <service id=".service_locator.xVcpdtv" alias=".service_locator.3tqxdNz"/>
     <service id=".service_locator.tGyyGS7" alias=".service_locator.l6oBZ.1"/>
-    <service id=".service_locator.3FHZPF." alias=".service_locator.JTDwdNm"/>
+    <service id=".service_locator.S.EL8db" alias=".service_locator.VeIdmon"/>
     <service id=".service_locator.cq_6XUl" alias=".service_locator.1ZHTQTz"/>
     <service id=".service_locator.7Ojw9h7" alias=".service_locator.UCBsVir"/>
     <service id=".service_locator._YeXMrO" alias=".service_locator.0jGNUZz"/>

@@ -18,15 +18,19 @@ class Referee
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['match_read'])]
     private ?string $first_name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['match_read'])]
     private ?string $last_name = null;
 
     #[ORM\OneToOne(inversedBy: 'referees', cascade: ['persist', 'remove'])]
+    #[Groups(['match_read'])]
     private ?Sport $sport_id = null;
 
     #[ORM\OneToMany(targetEntity: MatchHasReferees::class, mappedBy: 'referee')]
+    #[Groups(['match_read'])]
     private Collection $referees;
 
     public function __construct()

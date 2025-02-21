@@ -18,6 +18,17 @@ class SportController extends AbstractController
     #[OA\Response(
         response: 200,
         description: 'Get all sports',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(
+                properties: [
+                    new OA\Property(property: 'id', type: 'integer', example: 1),
+                    new OA\Property(property: 'name', type: 'string', example: 'sdadsa'),
+                    new OA\Property(property: 'referees', example: null, nullable: true),
+                    new OA\Property(property: 'league', example: null, nullable: true),
+                ]
+            )
+        )
     )]
     #[OA\Tag(name: 'Sport')]
     public function list(EntityManagerInterface $entityManager): JsonResponse
@@ -30,6 +41,15 @@ class SportController extends AbstractController
     #[OA\Response(
         response: 200,
         description: 'Get a sport by ID',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'id', type: 'integer', example: 1),
+                new OA\Property(property: 'name', type: 'string', example: 'sdadsa'),
+                new OA\Property(property: 'referees', type: '', example: null, nullable: true),
+                new OA\Property(property: 'league', type: '', example: null, nullable: true),
+            ],
+            type: 'object'
+        )
     )]
     #[OA\Tag(name: 'Sport')]
     public function getSport(Sport $sport): JsonResponse

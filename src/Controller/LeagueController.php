@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
 use App\Entity\League;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -10,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/league', name: 'league_')]
 class LeagueController extends AbstractController
@@ -18,23 +20,51 @@ class LeagueController extends AbstractController
     #[OA\Response(
         response: 200,
         description: 'Get all leagues',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(
+                properties: [
+                    new OA\Property(property: 'id', type: 'integer', example: 1),
+                    new OA\Property(property: 'association', type: 'string', example: 'dasfas'),
+                    new OA\Property(property: 'name', type: 'string', example: 'dsafas'),
+                    new OA\Property(property: 'country_id', type: 'array', items: new OA\Items(type: 'integer'), example: [1]),
+                    new OA\Property(property: 'sport_id', type: 'array', items: new OA\Items(type: 'integer'), example: [1]),
+                    new OA\Property(property: 'seasons', type: 'array', items: new OA\Items(type: 'array', items: new OA\Items(type: 'integer')), example: [[1]]), // Adjust this depending on the actual structure of seasons
+                ],
+                type: 'object'
+            )
+        )
     )]
     #[OA\Tag(name: 'League')]
-    public function list(EntityManagerInterface $entityManager): JsonResponse
+    public function list(EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
-        $leagues = $entityManager->getRepository(League::class)->findAll();
-        return $this->json($leagues, 200);
+        $seasons = $entityManager->getRepository(League::class)->findAll();
+        $json = $serializer->serialize($seasons, 'json', ['groups' => 'league:list']);
+
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('/{id}', methods: ['GET'])]
     #[OA\Response(
         response: 200,
         description: 'Get league by ID',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'id', type: 'integer', example: 1),
+                new OA\Property(property: 'association', type: 'string', example: 'dasfas'),
+                new OA\Property(property: 'name', type: 'string', example: 'dsafas'),
+                new OA\Property(property: 'country_id', type: 'array', items: new OA\Items(type: 'integer'), example: [1]),
+                new OA\Property(property: 'sport_id', type: 'array', items: new OA\Items(type: 'integer'), example: [1]),
+                new OA\Property(property: 'seasons', type: 'array', items: new OA\Items(type: 'array', items: new OA\Items(type: 'integer')), example: [[1]]), // Adjust based on your seasons structure
+            ],
+            type: 'object'
+        )
     )]
     #[OA\Tag(name: 'League')]
-    public function getLeague(League $league): JsonResponse
+    public function getLeague(League $league, SerializerInterface $serializer): JsonResponse
     {
-        return $this->json($league, 200);
+        $json = $serializer->serialize($league, 'json', ['groups' => 'league:list']);
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('', methods: ['POST'])]

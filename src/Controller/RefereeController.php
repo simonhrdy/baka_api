@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Referee;
+use App\Entity\Season;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -10,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/referees', name: 'referee_')]
 class RefereeController extends AbstractController
@@ -18,23 +20,48 @@ class RefereeController extends AbstractController
     #[OA\Response(
         response: 200,
         description: 'Get all referees',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(
+                properties: [
+                    new OA\Property(property: 'id', type: 'integer', example: 1),
+                    new OA\Property(property: 'first_name', type: 'string', example: 'asdassad'),
+                    new OA\Property(property: 'last_name', type: 'string', example: 'dsafasfsa'),
+                    new OA\Property(property: 'sport_id', type: 'array', items: new OA\Items(type: 'object')),
+                    new OA\Property(property: 'referees', type: 'array', items: new OA\Items(type: 'object')),
+                ]
+            )
+        )
     )]
     #[OA\Tag(name: 'Referee')]
-    public function list(EntityManagerInterface $entityManager): JsonResponse
+    public function list(EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
-        $referees = $entityManager->getRepository(Referee::class)->findAll();
-        return $this->json($referees, 200);
+        $seasons = $entityManager->getRepository(Referee::class)->findAll();
+        $json = $serializer->serialize($seasons, 'json', ['groups' => 'match_read']);
+
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('/{id}', methods: ['GET'])]
     #[OA\Response(
         response: 200,
         description: 'Get a referee by ID',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'id', type: 'integer', example: 1),
+                new OA\Property(property: 'first_name', type: 'string', example: 'asdassad'),
+                new OA\Property(property: 'last_name', type: 'string', example: 'dsafasfsa'),
+                new OA\Property(property: 'sport_id', type: 'array', items: new OA\Items(type: 'object')),
+                new OA\Property(property: 'referees', type: 'array', items: new OA\Items(type: 'object')),
+            ],
+            type: 'object'
+        )
     )]
     #[OA\Tag(name: 'Referee')]
-    public function getReferee(Referee $referee): JsonResponse
+    public function getReferee(Referee $referee, SerializerInterface $serializer): JsonResponse
     {
-        return $this->json($referee, 200);
+        $json = $serializer->serialize($referee, 'json', ['groups' => 'match_read']);
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('', methods: ['POST'])]

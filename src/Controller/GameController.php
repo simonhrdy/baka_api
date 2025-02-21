@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Game;
+use App\Entity\Season;
 use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -11,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/game', name: 'game_')]
 class GameController extends AbstractController
@@ -19,24 +21,55 @@ class GameController extends AbstractController
     #[OA\Response(
         response: 200,
         description: 'Get all games',
-
-    )]
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(
+                properties: [
+                    new OA\Property(property: 'id', type: 'integer', example: 1),
+                    new OA\Property(property: 'home_team_id', type: 'array', items: new OA\Items(type: 'integer'), example: [1]),
+                    new OA\Property(property: 'away_team_id', type: 'array', items: new OA\Items(type: 'integer'), example: [1]),
+                    new OA\Property(property: 'lap', type: 'integer', example: 1),
+                    new OA\Property(property: 'supervisor_id', type: 'integer', example: null, nullable: true),
+                    new OA\Property(property: 'parametrs', type: 'array', items: new OA\Items(type: 'object'), example: [["param1" => "value1", "param2" => "value2"]]),
+                    new OA\Property(property: 'date_of_game', type: 'string', format: 'date-time', example: '2025-02-21T15:43:28+00:00'),
+                    new OA\Property(property: 'league_id', type: 'array', items: new OA\Items(type: 'integer'), example: [1]),
+                ],
+                type: 'object'
+            )
+        )
+        )]
     #[OA\Tag(name: 'Game')]
-    public function list(EntityManagerInterface $entityManager): JsonResponse
+    public function list(EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
-        $games = $entityManager->getRepository(Game::class)->findAll();
-        return $this->json($games, 200);
+        $seasons = $entityManager->getRepository(Game::class)->findAll();
+        $json = $serializer->serialize($seasons, 'json', ['groups' => 'game:list']);
+
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('/{id}', methods: ['GET'])]
     #[OA\Response(
         response: 200,
         description: 'Get game by ID',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'id', type: 'integer', example: 1),
+                new OA\Property(property: 'home_team_id', type: 'array', items: new OA\Items(type: 'integer'), example: [1]),
+                new OA\Property(property: 'away_team_id', type: 'array', items: new OA\Items(type: 'integer'), example: [1]),
+                new OA\Property(property: 'lap', type: 'integer', example: 1),
+                new OA\Property(property: 'supervisor_id', type: 'integer', example: null, nullable: true),
+                new OA\Property(property: 'parametrs', type: 'array', items: new OA\Items(type: 'object'), example: [["param1" => "value1", "param2" => "value2"]]),
+                new OA\Property(property: 'date_of_game', type: 'string', format: 'date-time', example: '2025-02-21T15:43:28+00:00'),
+                new OA\Property(property: 'league_id', type: 'array', items: new OA\Items(type: 'integer'), example: [1]),
+            ],
+            type: 'object'
+        )
     )]
     #[OA\Tag(name: 'Game')]
-    public function getGame(Game $game): JsonResponse
+    public function getGame(Game $game, SerializerInterface $serializer): JsonResponse
     {
-        return $this->json($game, 200);
+        $json = $serializer->serialize($game, 'json', ['groups' => 'game:list']);
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('', methods: ['POST'])]

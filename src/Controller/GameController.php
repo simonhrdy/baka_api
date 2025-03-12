@@ -118,7 +118,7 @@ class GameController extends AbstractController
             return $this->json(['error' => 'Invalid date format'], 400);
         }
         $games = $gameRepository->findByDate($dateObject);
-        dd($games);
+        var_dump($games);
 
         $json = $serializer->serialize($games, 'json', ['groups' => 'game:list']);
 

@@ -437,7 +437,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.f94PFgx"/>
+      <argument type="service" id=".service_locator.lKmU3R."/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -1718,7 +1718,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.f94PFgx"/>
+      <argument type="service" id=".service_locator.lKmU3R."/>
     </service>
     <service id="routing.resolver" class="Symfony\Component\Config\Loader\LoaderResolver">
       <call method="addLoader">
@@ -6237,13 +6237,29 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.nLtHlEw" method="withContext"/>
     </service>
-    <service id=".service_locator.P.blNFL.App\Controller\UserController::forgotPassword()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".errored.GX8LbYe" class="App\Controller\MailerInterface">
+      <tag name="container.error" message="Cannot determine controller argument for &quot;App\Controller\UserController::forgotPassword()&quot;: the $mailer argument is type-hinted with the non-existent class or interface: &quot;App\Controller\MailerInterface&quot;. Did you forget to add a use statement?"/>
+    </service>
+    <service id=".service_locator.NCLQXqZ" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="mailer" type="service_closure" id=".errored.GX8LbYe"/>
+      </argument>
+    </service>
+    <service id=".service_locator.NCLQXqZ.App\Controller\UserController::forgotPassword()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\UserController::forgotPassword()"/>
       <argument>App\Controller\UserController::forgotPassword()</argument>
       <argument type="service" id="service_container"/>
+      <factory service=".service_locator.NCLQXqZ" method="withContext"/>
+    </service>
+    <service id=".service_locator.P.blNFL.App\Controller\UserController::resetPassword()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\UserController::resetPassword()"/>
+      <argument>App\Controller\UserController::resetPassword()</argument>
+      <argument type="service" id="service_container"/>
       <factory service=".service_locator.P.blNFL" method="withContext"/>
     </service>
-    <service id=".service_locator.f94PFgx" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.lKmU3R." class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.4wc4Ag1.kernel::registerContainerConfiguration()"/>
@@ -6311,7 +6327,8 @@
         <argument key="App\Controller\UserController::update" type="service_closure" id=".service_locator.nLtHlEw.App\Controller\UserController::update()"/>
         <argument key="App\Controller\UserController::delete" type="service_closure" id=".service_locator.nLtHlEw.App\Controller\UserController::delete()"/>
         <argument key="App\Controller\UserController::changePassword" type="service_closure" id=".service_locator.nLtHlEw.App\Controller\UserController::changePassword()"/>
-        <argument key="App\Controller\UserController::forgotPassword" type="service_closure" id=".service_locator.P.blNFL.App\Controller\UserController::forgotPassword()"/>
+        <argument key="App\Controller\UserController::forgotPassword" type="service_closure" id=".service_locator.NCLQXqZ.App\Controller\UserController::forgotPassword()"/>
+        <argument key="App\Controller\UserController::resetPassword" type="service_closure" id=".service_locator.P.blNFL.App\Controller\UserController::resetPassword()"/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.4wc4Ag1.kernel::registerContainerConfiguration()"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.4wc4Ag1.kernel::loadRoutes()"/>
         <argument key="App\Controller\CountryController:list" type="service_closure" id=".service_locator.P.blNFL.App\Controller\CountryController::list()"/>
@@ -6375,7 +6392,8 @@
         <argument key="App\Controller\UserController:update" type="service_closure" id=".service_locator.nLtHlEw.App\Controller\UserController::update()"/>
         <argument key="App\Controller\UserController:delete" type="service_closure" id=".service_locator.nLtHlEw.App\Controller\UserController::delete()"/>
         <argument key="App\Controller\UserController:changePassword" type="service_closure" id=".service_locator.nLtHlEw.App\Controller\UserController::changePassword()"/>
-        <argument key="App\Controller\UserController:forgotPassword" type="service_closure" id=".service_locator.P.blNFL.App\Controller\UserController::forgotPassword()"/>
+        <argument key="App\Controller\UserController:forgotPassword" type="service_closure" id=".service_locator.NCLQXqZ.App\Controller\UserController::forgotPassword()"/>
+        <argument key="App\Controller\UserController:resetPassword" type="service_closure" id=".service_locator.P.blNFL.App\Controller\UserController::resetPassword()"/>
       </argument>
     </service>
     <service id=".service_locator.mJTctrn" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -7755,7 +7773,7 @@
     <service id="security.token_storage" alias="security.untracked_token_storage" public="true"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.pRu6x_4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.f94PFgx"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.lKmU3R."/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.BxSdgVt"/>
     <service id="Psr\Log\LoggerInterface" alias="logger"/>
@@ -7798,6 +7816,7 @@
     <service id=".service_locator.D2Q8Tas" alias=".service_locator.Ob08xeA"/>
     <service id=".service_locator.wJr_qDa" alias=".service_locator.iKoxby9"/>
     <service id=".service_locator.OS8hQ7u" alias=".service_locator.nLtHlEw"/>
+    <service id=".service_locator.Xeo3O.E" alias=".service_locator.NCLQXqZ"/>
     <service id=".service_locator.U0hKbLx" alias=".service_locator.QaaoWjx"/>
   </services>
 </container>

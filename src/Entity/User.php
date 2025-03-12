@@ -14,7 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Ignore;
-use OpenApi\Attributes as OA;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -51,6 +50,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserHasFavoriteTeam::class, mappedBy: 'id_user')]
     #[Ignore]
     private Collection $userHasFavoriteTeams;
+
+    #[ORM\Column(type: "string", nullable: true)]
+    private ?string $resetToken = null;
+
+    #[ORM\Column(type: "datetime", nullable: true)]
+    private ?\DateTimeInterface $resetTokenExpiresAt = null;
 
     public function __construct()
     {
@@ -181,5 +186,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): void
+    {
+        $this->resetToken = $resetToken;
+    }
+
+    public function getResetTokenExpiresAt(): ?\DateTimeInterface
+    {
+        return $this->resetTokenExpiresAt;
+    }
+
+    public function setResetTokenExpiresAt(?\DateTimeInterface $resetTokenExpiresAt): void
+    {
+        $this->resetTokenExpiresAt = $resetTokenExpiresAt;
     }
 }

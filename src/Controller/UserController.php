@@ -100,7 +100,7 @@ class UserController extends AbstractController
 
     #[Route('/forgot-password', methods: ['POST'])]
     #[OA\Tag(name: 'User')]
-    public function forgotPassword(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    public function forgotPassword(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
         if (!isset($data['email'])) {
@@ -112,8 +112,44 @@ class UserController extends AbstractController
             return $this->json(['error' => 'User not found'], 404);
         }
 
-        //TODO EMAIL RESET LINK
+        $token = bin2hex(random_bytes(32));
+        $user->setResetToken($token);
+        $user->setResetTokenExpiresAt(new \DateTime('+1 hour'));
 
+        $entityManager->flush();
+
+        $email = (new Email())
+            ->from('no-reply@yourdomain.com')
+            ->to($user->getEmail())
+            ->subject('Password Reset Request')
+            ->html('<p>Click the link to reset your password: <a href="https://yourfrontend.com/reset-password?token='.$token.'">Reset Password</a></p>');
+
+        $mailer->send($email);
         return $this->json(['message' => 'If the email exists, a reset link has been sent']);
     }
+
+    #[Route('/reset-password', methods: ['POST'])]
+    #[OA\Tag(name: 'User')]
+    public function resetPassword(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        if (!isset($data['token']) || !isset($data['new_password'])) {
+            return $this->json(['error' => 'Token and new password are required'], 400);
+        }
+
+        $user = $entityManager->getRepository(User::class)->findOneBy(['resetToken' => $data['token']]);
+        if (!$user || $user->getResetTokenExpiresAt() < new \DateTime()) {
+            return $this->json(['error' => 'Invalid or expired token'], 400);
+        }
+
+        $user->setPassword($data['new_password']);
+        $user->setResetToken(null);
+        $user->setResetTokenExpiresAt(null);
+
+        $entityManager->flush();
+
+        return $this->json(['message' => 'Password has been successfully reset']);
+    }
+
+
 }

@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\MailerInterface;
+
 
 #[Route('/users', name: 'user_')]
 class UserController extends AbstractController
@@ -119,7 +122,7 @@ class UserController extends AbstractController
         $entityManager->flush();
 
         $email = (new Email())
-            ->from('no-reply@yourdomain.com')
+            ->from('no-reply@coral-app-pmzum.ondigitalocean.app')
             ->to($user->getEmail())
             ->subject('Password Reset Request')
             ->html('<p>Click the link to reset your password: <a href="https://yourfrontend.com/reset-password?token='.$token.'">Reset Password</a></p>');

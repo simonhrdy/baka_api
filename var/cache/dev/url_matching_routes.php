@@ -114,6 +114,7 @@ return [
                             .'|/change\\-password(*:433)'
                         .')'
                         .'|forgot\\-password(*:458)'
+                        .'|reset\\-password(*:481)'
                     .')'
                 .')'
             .')/?$}sDu',
@@ -181,8 +182,9 @@ return [
             [['_route' => 'user_app_user_delete', '_controller' => 'App\\Controller\\UserController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
         433 => [[['_route' => 'user_app_user_changepassword', '_controller' => 'App\\Controller\\UserController::changePassword'], ['id'], ['POST' => 0], null, false, false, null]],
-        458 => [
-            [['_route' => 'user_app_user_forgotpassword', '_controller' => 'App\\Controller\\UserController::forgotPassword'], [], ['POST' => 0], null, false, false, null],
+        458 => [[['_route' => 'user_app_user_forgotpassword', '_controller' => 'App\\Controller\\UserController::forgotPassword'], [], ['POST' => 0], null, false, false, null]],
+        481 => [
+            [['_route' => 'user_app_user_resetpassword', '_controller' => 'App\\Controller\\UserController::resetPassword'], [], ['POST' => 0], null, false, false, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

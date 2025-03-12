@@ -26,6 +26,8 @@ security:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/docs, roles: PUBLIC_ACCESS }
         - { path: ^/api/users/, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/users/forgot-password, roles: PUBLIC_ACCESS }
+        - { path: ^/api/users/reset-password, roles: PUBLIC_ACCESS }
         - { path: ^/api/players/, roles: IS_AUTHENTICATED_FULLY, methods: [ POST, PUT, DELETE ] }
         - { path: ^/api/teams/, roles: IS_AUTHENTICATED_FULLY, methods: [ POST, PUT, DELETE ] }
         - { path: ^/api/countries/, roles: IS_AUTHENTICATED_FULLY, methods: [ POST, PUT, DELETE ] }

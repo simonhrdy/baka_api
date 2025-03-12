@@ -14,24 +14,21 @@ class League
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['league:list'])]
+    #[Groups(['league:list', 'game:list', 'country:list', 'season:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['league:list'])]
+    #[Groups(['league:list', 'game:list', 'country:list', 'season:list'])]
     private ?string $assocation = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['league:list'])]
+    #[Groups(['league:list', 'game:list', 'country:list', 'season:list'])]
     private ?string $name = null;
 
-    #[ORM\OneToOne(inversedBy: 'league', cascade: ['persist', 'remove'])]
-    #[Groups(['league:list'])]
-    private ?Country $country_id = null;
 
     #[ORM\OneToOne(inversedBy: 'league', cascade: ['persist', 'remove'])]
     #[Groups(['league:list'])]
-    private ?Sport $sport_id = null;
+    private ?Sport $sport = null;
 
     /**
      * @var Collection<int, Season>
@@ -39,6 +36,10 @@ class League
     #[ORM\OneToMany(targetEntity: Season::class, mappedBy: 'league_id')]
     #[Groups(['league:list'])]
     private Collection $seasons;
+
+    #[ORM\ManyToOne]
+    #[Groups(['league:list'])]
+    private ?Country $country_id = null;
 
     public function __construct()
     {
@@ -75,29 +76,7 @@ class League
         return $this;
     }
 
-    public function getCountryId(): ?Country
-    {
-        return $this->country_id;
-    }
 
-    public function setCountryId(?Country $country_id): static
-    {
-        $this->country_id = $country_id;
-
-        return $this;
-    }
-
-    public function getSportId(): ?Sport
-    {
-        return $this->sport_id;
-    }
-
-    public function setSportId(?Sport $sport_id): static
-    {
-        $this->sport_id = $sport_id;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Season>
@@ -128,5 +107,28 @@ class League
 
         return $this;
     }
+
+    public function getCountryId(): ?Country
+    {
+        return $this->country_id;
+    }
+
+    public function setCountryId(?Country $country_id): static
+    {
+        $this->country_id = $country_id;
+
+        return $this;
+    }
+
+    public function getSport(): ?Sport
+    {
+        return $this->sport;
+    }
+
+    public function setSport(?Sport $sport): void
+    {
+        $this->sport = $sport;
+    }
+
 
 }

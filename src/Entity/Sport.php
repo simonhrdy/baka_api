@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\SportRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SportRepository::class)]
 class Sport
@@ -11,16 +14,16 @@ class Sport
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['sport:list', 'league:list', 'referee:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['sport:list', 'league:list', 'referee:list'])]
     private ?string $name = null;
 
-    #[ORM\OneToOne(mappedBy: 'sport_id', cascade: ['persist', 'remove'])]
-    private ?Referee $referees = null;
-
-    #[ORM\OneToOne(mappedBy: 'sport_id', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'sport', cascade: ['persist', 'remove'])]
     private ?League $league = null;
+
 
     public function getId(): ?int
     {
@@ -39,27 +42,6 @@ class Sport
         return $this;
     }
 
-    public function getReferees(): ?Referee
-    {
-        return $this->referees;
-    }
-
-    public function setReferees(?Referee $referees): static
-    {
-        // unset the owning side of the relation if necessary
-        if ($referees === null && $this->referees !== null) {
-            $this->referees->setSportId(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($referees !== null && $referees->getSportId() !== $this) {
-            $referees->setSportId($this);
-        }
-
-        $this->referees = $referees;
-
-        return $this;
-    }
 
     public function getLeague(): ?League
     {
@@ -68,12 +50,10 @@ class Sport
 
     public function setLeague(?League $league): static
     {
-        // unset the owning side of the relation if necessary
         if ($league === null && $this->league !== null) {
             $this->league->setSportId(null);
         }
 
-        // set the owning side of the relation if necessary
         if ($league !== null && $league->getSportId() !== $this) {
             $league->setSportId($this);
         }

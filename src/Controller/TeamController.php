@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/teams', name: 'team_')]
 class TeamController extends AbstractController
@@ -47,10 +48,11 @@ class TeamController extends AbstractController
         )
     )]
     #[OA\Tag(name: 'Team')]
-    public function list(EntityManagerInterface $entityManager): JsonResponse
+    public function list(EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
         $teams = $entityManager->getRepository(Team::class)->findAll();
-        return $this->json($teams, 200);
+        $json = $serializer->serialize($teams, 'json', ['groups' => 'team:list']);
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('/{id}', methods: ['GET'])]
@@ -83,9 +85,10 @@ class TeamController extends AbstractController
         )
     )]
     #[OA\Tag(name: 'Team')]
-    public function getTeam(Team $team): JsonResponse
+    public function getTeam(Team $team, SerializerInterface $serializer): JsonResponse
     {
-        return $this->json($team, 200);
+        $json = $serializer->serialize($team, 'json', ['groups' => 'team:list']);
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('', methods: ['POST'])]

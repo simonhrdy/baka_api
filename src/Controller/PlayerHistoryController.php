@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/player-history', name: 'player_history_')]
 class PlayerHistoryController extends AbstractController
@@ -20,10 +21,11 @@ class PlayerHistoryController extends AbstractController
         description: 'Get all player history records',
     )]
     #[OA\Tag(name: 'PlayerHistory')]
-    public function list(EntityManagerInterface $entityManager): JsonResponse
+    public function list(EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
         $playerHistory = $entityManager->getRepository(PlayerHistory::class)->findAll();
-        return $this->json($playerHistory, 200);
+        $json = $serializer->serialize($playerHistory, 'json', ['groups' => 'list:list']);
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('/{id}', methods: ['GET'])]
@@ -32,9 +34,10 @@ class PlayerHistoryController extends AbstractController
         description: 'Get player history by ID',
     )]
     #[OA\Tag(name: 'PlayerHistory')]
-    public function getPlayerHistory(PlayerHistory $playerHistory): JsonResponse
+    public function getPlayerHistory(PlayerHistory $playerHistory, SerializerInterface $serializer): JsonResponse
     {
-        return $this->json($playerHistory, 200);
+        $json = $serializer->serialize($playerHistory, 'json', ['groups' => 'list:list']);
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('', methods: ['POST'])]

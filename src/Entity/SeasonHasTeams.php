@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\SeasonHasTeamsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SeasonHasTeamsRepository::class)]
 class SeasonHasTeams
@@ -11,15 +12,19 @@ class SeasonHasTeams
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['list:list'])]
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['list:list'])]
     private ?int $points = null;
 
     #[ORM\ManyToOne(inversedBy: 'seasonHasTeams')]
+    #[Groups(['list:list'])]
     private ?Season $season_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'seasonHasTeams')]
+    #[Groups(['list:list'])]
     private ?Team $team_id = null;
 
 

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CountryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CountryRepository::class)]
 class Country
@@ -11,16 +12,17 @@ class Country
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['country:list', 'league:list', 'player:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['country:list', 'league:list', 'player:list'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['country:list', 'league:list', 'player:list'])]
     private ?string $short_name = null;
 
-    #[ORM\OneToOne(mappedBy: 'country_id', cascade: ['persist', 'remove'])]
-    private ?League $league = null;
 
     public function getId(): ?int
     {
@@ -47,28 +49,6 @@ class Country
     public function setShortName(string $short_name): static
     {
         $this->short_name = $short_name;
-
-        return $this;
-    }
-
-    public function getLeague(): ?League
-    {
-        return $this->league;
-    }
-
-    public function setLeague(?League $league): static
-    {
-        // unset the owning side of the relation if necessary
-        if ($league === null && $this->league !== null) {
-            $this->league->setCountryId(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($league !== null && $league->getCountryId() !== $this) {
-            $league->setCountryId($this);
-        }
-
-        $this->league = $league;
 
         return $this;
     }

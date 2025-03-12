@@ -13,6 +13,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -22,12 +23,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['list:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['list:list'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['list:list'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
@@ -35,6 +39,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(type: "json")]
+    #[Groups(['list:list'])]
     private array $roles = [];
 
     /**
@@ -52,9 +57,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $userHasFavoriteTeams;
 
     #[ORM\Column(type: "string", nullable: true)]
+    #[Ignore]
     private ?string $resetToken = null;
 
     #[ORM\Column(type: "datetime", nullable: true)]
+    #[Ignore]
     private ?\DateTimeInterface $resetTokenExpiresAt = null;
 
     public function __construct()

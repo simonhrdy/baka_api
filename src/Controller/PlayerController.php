@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/players', name: 'player_')]
 class PlayerController extends AbstractController
@@ -35,10 +36,12 @@ class PlayerController extends AbstractController
             )
         )
     )]
-    public function list(EntityManagerInterface $entityManager): JsonResponse
+    public function list(EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
         $players = $entityManager->getRepository(Player::class)->findAll();
-        return $this->json($players, 200);
+        $json = $serializer->serialize($players, 'json', ['groups' => 'player:list']);
+
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('/{id}', methods: ['GET'])]
@@ -61,7 +64,7 @@ class PlayerController extends AbstractController
         )]
     public function getPlayer(Player $player): JsonResponse
     {
-        return $this->json($player, 200, [], ['groups' => ['player:read']]);
+        return $this->json($player, 200, [], ['groups' => 'player:list']);
     }
 
     #[Route('', methods: ['POST'])]

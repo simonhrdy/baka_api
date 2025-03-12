@@ -5,6 +5,7 @@ use App\Repository\TeamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
@@ -13,18 +14,23 @@ class Team
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['team:list', 'game:list', 'player:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['team:list', 'game:list', 'player:list', 'list:list'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['team:list', 'game:list', 'player:list', 'list:list'])]
     private ?string $surname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['team:list', 'game:list', 'player:list', 'list:list'])]
     private ?string $coach = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['team:list', 'game:list', 'player:list', 'list:list'])]
     private ?string $image_src = null;
 
     /**
@@ -40,21 +46,25 @@ class Team
     private Collection $games_away;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['team:list'])]
     private ?string $short_name = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Groups(['team:list'])]
     private ?Stadium $stadium_id = null;
 
     /**
      * @var Collection<int, Player>
      */
     #[ORM\OneToMany(targetEntity: Player::class, mappedBy: 'team_id')]
+    #[Groups(['team:list'])]
     private Collection $players;
 
     /**
      * @var Collection<int, PlayerHistory>
      */
-    #[ORM\OneToMany(targetEntity: PlayerHistory::class, mappedBy: 'team_id')]
+    #[ORM\ManyToMany(targetEntity: PlayerHistory::class, mappedBy: 'team_id')]
+    #[Ignore]
     private Collection $playerHistories;
 
     /**

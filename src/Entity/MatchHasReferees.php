@@ -12,17 +12,17 @@ class MatchHasReferees
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['match_read'])]
+    #[Groups(['list:list', 'referee:list'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Referee::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['match_read', 'match_write'])]
+    #[Groups(['list:list'])]
     private ?Referee $referee = null;
 
     #[ORM\ManyToOne(targetEntity: Game::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['match_read', 'match_write'])]
+    #[Groups(['list:list', 'referee:list'])]
     private ?Game $game = null;
 
 

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PlayerRepository::class)]
 class Player
@@ -14,27 +15,34 @@ class Player
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['player:list', 'team:list'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['player:list'])]
     private ?\DateTimeInterface $birthdate = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['player:list', 'list:list', 'team:list'])]
     private ?string $first_name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['player:list', 'list:list', 'team:list'])]
     private ?string $last_name = null;
 
     #[ORM\ManyToOne(inversedBy: 'players')]
+    #[Groups(['player:list'])]
     private ?Team $team_id = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Groups(['player:list'])]
     private ?Country $country_id = null;
 
     /**
      * @var Collection<int, PlayerHistory>
      */
     #[ORM\OneToMany(targetEntity: PlayerHistory::class, mappedBy: 'player_id')]
+    #[Groups(['player:list'])]
     private Collection $playerHistories;
 
     public function __construct()

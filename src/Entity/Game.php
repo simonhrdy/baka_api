@@ -17,7 +17,7 @@ class Game
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['game:list'])]
+    #[Groups(['game:list', 'referee:list', 'team:list'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'games')]
@@ -50,7 +50,8 @@ class Game
     #[Groups(['game:list'])]
     private Collection $game;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: League::class, inversedBy: 'games')]
+    #[ORM\JoinColumn(name: 'league_id', referencedColumnName: 'id')]
     #[Groups(['game:list'])]
     private ?League $league_id = null;
 

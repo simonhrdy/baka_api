@@ -37,7 +37,7 @@ class RefereeController extends AbstractController
     public function list(EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
         $seasons = $entityManager->getRepository(Referee::class)->findAll();
-        $json = $serializer->serialize($seasons, 'json', ['groups' => 'match_read']);
+        $json = $serializer->serialize($seasons, 'json', ['groups' => 'referee:list']);
 
         return new JsonResponse($json, 200, [], true);
     }
@@ -60,7 +60,7 @@ class RefereeController extends AbstractController
     #[OA\Tag(name: 'Referee')]
     public function getReferee(Referee $referee, SerializerInterface $serializer): JsonResponse
     {
-        $json = $serializer->serialize($referee, 'json', ['groups' => 'match_read']);
+        $json = $serializer->serialize($referee, 'json', ['groups' => 'referee:list']);
         return new JsonResponse($json, 200, [], true);
     }
 

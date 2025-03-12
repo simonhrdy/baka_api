@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\StadiumRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: StadiumRepository::class)]
 class Stadium
@@ -11,12 +12,15 @@ class Stadium
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['list:list', 'team:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['list:list', 'team:list'])]
     private ?string $name = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['list:list', 'team:list'])]
     private ?int $capacity = null;
 
     public function getId(): ?int

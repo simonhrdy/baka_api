@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PlayerStatsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PlayerStatsRepository::class)]
 class PlayerStats
@@ -11,12 +12,15 @@ class PlayerStats
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['list:list'])]
     private ?int $id = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Groups(['stats:list'])]
     private ?Player $player_id = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['stats:list'])]
     private ?array $parametrs = null;
 
     public function getId(): ?int

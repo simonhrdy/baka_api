@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PlayerHistoryRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PlayerHistoryRepository::class)]
 class PlayerHistory
@@ -12,15 +13,19 @@ class PlayerHistory
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['list:list', 'player:list'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['list:list', 'player:list'])]
     private ?\DateTimeInterface $date_of_transfer = null;
 
     #[ORM\ManyToOne(inversedBy: 'playerHistories')]
+    #[Groups(['list:list'])]
     private ?Player $player_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'playerHistories')]
+    #[Groups(['list:list', 'player:list'])]
     private ?Team $team_id = null;
 
     public function getId(): ?int

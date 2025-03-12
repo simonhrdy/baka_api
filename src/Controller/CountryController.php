@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/countries', name: 'country_')]
 class CountryController extends AbstractController
@@ -25,17 +26,17 @@ class CountryController extends AbstractController
                 new OA\Property(property: 'id', type: 'integer', example: 1),
                 new OA\Property(property: 'name', type: 'string', example: 'Španělsko'),
                 new OA\Property(property: 'shortName', type: 'string', example: 'SPA'),
-                new OA\Property(property: 'league', type: 'League'),
             ],
             type: 'object'
         )
         )
     )]
     #[OA\Tag(name: 'Country')]
-    public function list(EntityManagerInterface $entityManager): JsonResponse
+    public function list(EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
         $countries = $entityManager->getRepository(Country::class)->findAll();
-        return $this->json($countries, 200);
+        $json = $serializer->serialize($countries, 'json', ['groups' => 'country:list']);
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('/{id}', methods: ['GET'])]

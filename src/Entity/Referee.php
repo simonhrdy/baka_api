@@ -14,29 +14,17 @@ class Referee
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['match_read'])]
+    #[Groups(['referee:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['match_read'])]
+    #[Groups(['referee:list'])]
     private ?string $first_name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['match_read'])]
+    #[Groups(['referee:list'])]
     private ?string $last_name = null;
 
-    #[ORM\OneToOne(inversedBy: 'referees', cascade: ['persist', 'remove'])]
-    #[Groups(['match_read'])]
-    private ?Sport $sport_id = null;
-
-    #[ORM\OneToMany(targetEntity: MatchHasReferees::class, mappedBy: 'referee')]
-    #[Groups(['match_read'])]
-    private Collection $referees;
-
-    public function __construct()
-    {
-        $this->referees = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -65,22 +53,5 @@ class Referee
         $this->last_name = $last_name;
 
         return $this;
-    }
-
-    public function getSportId(): ?Sport
-    {
-        return $this->sport_id;
-    }
-
-    public function setSportId(?Sport $sport_id): static
-    {
-        $this->sport_id = $sport_id;
-
-        return $this;
-    }
-
-    public function getReferees(): Collection
-    {
-        return $this->referees;
     }
 }

@@ -15,19 +15,19 @@ class Season
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['season:list'])]
+    #[Groups(['season:list', 'league:list'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['season:list'])]
+    #[Groups(['season:list', 'league:list'])]
     private ?bool $is_active = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['season:list'])]
+    #[Groups(['season:list', 'league:list'])]
     private ?\DateTimeInterface $yearEnd = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['season:list'])]
+    #[Groups(['season:list', 'league:list'])]
     private ?\DateTimeInterface $yearStart = null;
 
     #[ORM\ManyToOne(inversedBy: 'seasons')]

@@ -111,7 +111,7 @@ class GameController extends AbstractController
 
     #[Route('/date/{date}', methods: ['GET'])]
     #[OA\Tag(name: 'Game')]
-    public function getByDate(string $date, GameRepository $gameRepository): JsonResponse
+    public function getByDate(string $date, GameRepository $gameRepository, SerializerInterface $serializer): JsonResponse
     {
         $dateObject = \DateTime::createFromFormat('Y-m-d', $date);
         if (!$dateObject) {
@@ -119,6 +119,8 @@ class GameController extends AbstractController
         }
         $games = $gameRepository->findByDate($dateObject);
 
-        return $this->json($games);
+        $json = $serializer->serialize($games, 'json', ['groups' => 'game:list']);
+
+        return new JsonResponse($json, 200, [], true);
     }
 }

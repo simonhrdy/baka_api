@@ -24,6 +24,9 @@ class Sport
     #[ORM\OneToOne(mappedBy: 'sport', cascade: ['persist', 'remove'])]
     private ?League $league = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $img_src = null;
+
 
     public function getId(): ?int
     {
@@ -59,6 +62,18 @@ class Sport
         }
 
         $this->league = $league;
+
+        return $this;
+    }
+
+    public function getImgSrc(): ?string
+    {
+        return $this->img_src;
+    }
+
+    public function setImgSrc(?string $img_src): static
+    {
+        $this->img_src = $img_src;
 
         return $this;
     }

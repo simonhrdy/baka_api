@@ -66,14 +66,35 @@ class SportController extends AbstractController
     public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['name']) || empty($data['name'])) {
+            return $this->json(['error' => 'Name is required'], 400);
+        }
+
         $sport = new Sport();
         $sport->setName($data['name']);
+
+        $withoutAccents = str_replace(
+            ['á', 'č', 'ě', 'é', 'í', 'ň', 'ó', 'ř', 'š', 'ť', 'ú', 'ů', 'ž'],
+            ['a', 'c', 'e', 'e', 'i', 'n', 'o', 'r', 's', 't', 'u', 'u', 'z'],
+            $data['name']
+        );
+
+        $convertedText = strtolower(str_replace(' ', '-', $withoutAccents));
+
+        if (str_ends_with($convertedText, '?')) {
+            $convertedText = rtrim($convertedText, '?');
+        }
+
+        $sport->setUrl($convertedText);
+        $sport->setImgSrc($data['img_src'] ?? null);
 
         $entityManager->persist($sport);
         $entityManager->flush();
 
         return $this->json($sport, 201);
     }
+
 
     #[Route('/{id}', methods: ['PUT'])]
     #[OA\Tag(name: 'Sport')]

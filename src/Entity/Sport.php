@@ -28,6 +28,10 @@ class Sport
     #[Groups(['sport:list', 'league:list', 'referee:list'])]
     private ?string $img_src = null;
 
+    #[ORM\Column(length: 255)]
+    #[Groups(['sport:list', 'league:list', 'referee:list'])]
+    private ?string $url = null;
+
 
     public function getId(): ?int
     {
@@ -75,6 +79,29 @@ class Sport
     public function setImgSrc(?string $img_src): static
     {
         $this->img_src = $img_src;
+
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string $url): static
+    {
+        $this->url = $url;
+        $withoutAccents = str_replace(
+            ['á', 'č', 'ě', 'é', 'í', 'ň', 'ó', 'ř', 'š', 'ť', 'ú', 'ů', 'ž'],
+            ['a', 'c', 'e', 'e', 'i', 'n', 'o', 'r', 's', 't', 'u', 'u', 'z'],
+            $dto->name
+        );
+
+        $convertedText = strtolower(str_replace(' ', '-', $withoutAccents));
+
+        if (str_ends_with($convertedText, '?')) {
+            $convertedText = rtrim($convertedText, '?');
+        }
 
         return $this;
     }

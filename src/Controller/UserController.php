@@ -125,7 +125,7 @@ class UserController extends AbstractController
             ->from('no-reply@coral-app-pmzum.ondigitalocean.app')
             ->to($user->getEmail())
             ->subject('Password Reset Request')
-            ->html('<p>Click the link to reset your password: <a href="https://yourfrontend.com/reset-password?token='.$token.'">Reset Password</a></p>');
+            ->html('<p>Click the link to reset your password: <a href="https://yourfrontend.com/reset-password/'.$token.'">Reset Password</a></p>');
 
         $mailer->send($email);
         return $this->json(['message' => 'If the email exists, a reset link has been sent']);

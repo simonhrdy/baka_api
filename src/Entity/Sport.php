@@ -25,6 +25,7 @@ class Sport
     private ?League $league = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['sport:list', 'league:list', 'referee:list'])]
     private ?string $img_src = null;
 
 

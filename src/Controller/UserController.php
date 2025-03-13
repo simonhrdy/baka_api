@@ -117,7 +117,7 @@ class UserController extends AbstractController
 
         $token = bin2hex(random_bytes(32));
         $user->setResetToken($token);
-        $user->setResetTokenExpiresAt(new \DateTime('+1 hour'));
+        $user->setResetTokenExpiresAt(new \DateTime('+2 hour'));
 
         $entityManager->flush();
 
@@ -154,5 +154,23 @@ class UserController extends AbstractController
         return $this->json(['message' => 'Password has been successfully reset']);
     }
 
+    #[Route('/verify-token', methods: ['POST'])]
+    #[OA\Tag(name: 'User')]
+    public function verifyToken(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['token'])) {
+            return $this->json(['error' => 'Token is required'], 400);
+        }
+
+        $token = $data['token'];
+        $user = $entityManager->getRepository(User::class)->findOneBy(['resetToken' => $token]);
+
+        if (!$user || $user->getResetTokenExpiresAt() < new \DateTime()) {
+            return $this->json(['error' => 'Invalid or expired token'], 400);
+        }
+        return $this->json(['message' => 'Valid token']);
+    }
 
 }

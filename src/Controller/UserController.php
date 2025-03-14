@@ -177,4 +177,12 @@ class UserController extends AbstractController
         return $this->json(['message' => 'Valid token']);
     }
 
+    #[Route('/favorite-teams', methods: ['GET'])]
+    #[OA\Tag(name: 'User')]
+    public function getUserFavoriteTeams(): JsonResponse
+    {
+        $user = $this->getUser();
+        return $this->json($user->getUserHasFavoriteTeams(), 200);
+    }
+
 }

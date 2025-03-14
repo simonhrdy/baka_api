@@ -19,7 +19,7 @@ class GameRepository extends ServiceEntityRepository
     public function findByDateAndSport(\DateTimeInterface $date, string $sport)
     {
         return $this->createQueryBuilder('g')
-            ->join('g.league', 'l')
+            ->join('g.league_id', 'l')
             ->join('l.sport', 's')
             ->where('g.date_of_game >= :startDate')
             ->andWhere('g.date_of_game < :endDate')

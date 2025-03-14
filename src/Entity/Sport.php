@@ -14,24 +14,28 @@ class Sport
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['sport:list', 'league:list', 'referee:list'])]
+    #[Groups(['sport:list', 'league:list', 'referee:list', 'game:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['sport:list', 'league:list', 'referee:list'])]
+    #[Groups(['sport:list', 'league:list', 'referee:list', 'game:list'])]
     private ?string $name = null;
 
-    #[ORM\OneToOne(mappedBy: 'sport', cascade: ['persist', 'remove'])]
-    private ?League $league = null;
+    #[ORM\OneToMany(targetEntity: League::class, mappedBy: 'sport', cascade: ['persist', 'remove'])]
+    private Collection $leagues;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['sport:list', 'league:list', 'referee:list'])]
     private ?string $img_src = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['sport:list', 'league:list', 'referee:list'])]
+    #[Groups(['sport:list', 'league:list', 'referee:list', 'game:list'])]
     private ?string $url = null;
 
+    public function __construct()
+    {
+        $this->leagues = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -46,27 +50,6 @@ class Sport
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-
-    public function getLeague(): ?League
-    {
-        return $this->league;
-    }
-
-    public function setLeague(?League $league): static
-    {
-        if ($league === null && $this->league !== null) {
-            $this->league->setSportId(null);
-        }
-
-        if ($league !== null && $league->getSportId() !== $this) {
-            $league->setSportId($this);
-        }
-
-        $this->league = $league;
 
         return $this;
     }
@@ -105,4 +88,32 @@ class Sport
 
         return $this;
     }
+
+    public function getLeagues(): Collection
+    {
+        return $this->leagues;
+    }
+
+    public function addLeague(League $league): self
+    {
+        if (!$this->leagues->contains($league)) {
+            $this->leagues[] = $league;
+            $league->setSport($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLeague(League $league): self
+    {
+        if ($this->leagues->removeElement($league)) {
+            if ($league->getSport() === $this) {
+                $league->setSport(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

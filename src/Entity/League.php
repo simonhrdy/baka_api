@@ -25,9 +25,8 @@ class League
     #[Groups(['league:list', 'game:list', 'country:list', 'season:list'])]
     private ?string $name = null;
 
-
-    #[ORM\OneToOne(inversedBy: 'league', cascade: ['persist', 'remove'])]
-    #[Groups(['league:list'])]
+    #[ORM\ManyToOne(targetEntity: Sport::class, inversedBy: 'leagues')]
+    #[Groups(['league:list', 'game:list'])]
     private ?Sport $sport = null;
 
     /**

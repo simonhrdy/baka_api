@@ -151,8 +151,12 @@ class UserController extends AbstractController
 
         $entityManager->flush();
 
-        return $this->json(['message' => 'Password has been successfully reset']);
+        return $this->json([
+            'message' => 'Password has been successfully reset',
+            'email' => $user->getEmail()
+        ]);
     }
+
 
     #[Route('/verify-token', methods: ['POST'])]
     #[OA\Tag(name: 'User')]

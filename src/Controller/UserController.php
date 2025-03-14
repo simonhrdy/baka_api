@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\UserHasFavoriteTeamRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -179,10 +180,12 @@ class UserController extends AbstractController
 
     #[Route('/favorite-teams', methods: ['GET'])]
     #[OA\Tag(name: 'User')]
-    public function getUserFavoriteTeams(): JsonResponse
+    public function getUserFavoriteTeams(UserHasFavoriteTeamRepository $userHasFavoriteTeamRepository): JsonResponse
     {
         $user = $this->getUser();
-        return $this->json($user->getUserHasFavoriteTeams(), 200);
+        $id = $user->getId();
+        $favoriteTeams = $userHasFavoriteTeamRepository->findBy(['id_user' => $id]);
+        return $this->json($favoriteTeams, 200);
     }
 
 }

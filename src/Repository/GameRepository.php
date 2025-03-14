@@ -16,13 +16,17 @@ class GameRepository extends ServiceEntityRepository
         parent::__construct($registry, Game::class);
     }
 
-    public function findByDate(\DateTimeInterface $date)
+    public function findByDateAndSport(\DateTimeInterface $date, string $sport)
     {
         return $this->createQueryBuilder('g')
+            ->join('g.league', 'l')
+            ->join('l.sport', 's')
             ->where('g.date_of_game >= :startDate')
             ->andWhere('g.date_of_game < :endDate')
+            ->andWhere('s.url = :sport')
             ->setParameter('startDate', $date->format('Y-m-d 00:00:00'))
             ->setParameter('endDate', $date->format('Y-m-d 23:59:59'))
+            ->setParameter('sport', $sport)
             ->getQuery()
             ->getResult();
     }

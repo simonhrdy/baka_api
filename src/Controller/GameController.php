@@ -109,15 +109,15 @@ class GameController extends AbstractController
         return $this->json(null, 204);
     }
 
-    #[Route('/date/{date}', methods: ['GET'])]
+    #[Route('/date/{date}/{sport}', methods: ['GET'])]
     #[OA\Tag(name: 'Game')]
-    public function getByDate(string $date, GameRepository $gameRepository, SerializerInterface $serializer): JsonResponse
+    public function getByDate(string $date, string $sport, GameRepository $gameRepository, SerializerInterface $serializer): JsonResponse
     {
         $dateObject = \DateTime::createFromFormat('Y-m-d', $date);
         if (!$dateObject) {
             return $this->json(['error' => 'Invalid date format'], 400);
         }
-        $games = $gameRepository->findByDate($dateObject);
+        $games = $gameRepository->findByDateAndSport($dateObject, $sport);
         $json = $serializer->serialize($games, 'json', ['groups' => 'game:list']);
 
         return new JsonResponse($json, 200, [], true);

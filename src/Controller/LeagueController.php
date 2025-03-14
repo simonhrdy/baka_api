@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Game;
 use App\Entity\League;
+use App\Repository\GameRepository;
+use App\Repository\LeagueRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -102,5 +104,15 @@ class LeagueController extends AbstractController
         $entityManager->remove($league);
         $entityManager->flush();
         return $this->json(null, 204);
+    }
+
+    #[Route('/sport/{sport}', methods: ['GET'])]
+    #[OA\Tag(name: 'League')]
+    public function getByDate(string $sport, LeagueRepository $leagueRepository, SerializerInterface $serializer): JsonResponse
+    {
+        $league = $leagueRepository->findBySport($sport);
+        $json = $serializer->serialize($league, 'json', ['groups' => 'league:list']);
+
+        return new JsonResponse($json, 200, [], true);
     }
 }

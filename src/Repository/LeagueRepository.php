@@ -16,6 +16,16 @@ class LeagueRepository extends ServiceEntityRepository
         parent::__construct($registry, League::class);
     }
 
+    public function findBySport(string $sport)
+    {
+        return $this->createQueryBuilder('g')
+            ->join('g.sport', 's')
+            ->andWhere('s.url = :sport')
+            ->setParameter('sport', $sport)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return League[] Returns an array of League objects
     //     */

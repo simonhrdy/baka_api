@@ -50,7 +50,7 @@ class Team
     private ?string $short_name = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[Groups(['team:list'])]
+    #[Groups(['team:list', 'game:list', 'player:list', 'list:list'])]
     private ?Stadium $stadium_id = null;
 
     /**

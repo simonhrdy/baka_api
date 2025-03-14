@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 
 #[Route('/users', name: 'user_')]
@@ -180,12 +181,13 @@ class UserController extends AbstractController
 
     #[Route('/favorite-teams', methods: ['GET'])]
     #[OA\Tag(name: 'User')]
-    public function getUserFavoriteTeams(UserHasFavoriteTeamRepository $userHasFavoriteTeamRepository): JsonResponse
+    public function getUserFavoriteTeams(UserHasFavoriteTeamRepository $userHasFavoriteTeamRepository, SerializerInterface $serializer): JsonResponse
     {
         $user = $this->getUser();
         $id = $user->getId();
         $favoriteTeams = $userHasFavoriteTeamRepository->findBy(['id_user' => $id]);
-        return $this->json($favoriteTeams, 200);
+        $json = $serializer->serialize($favoriteTeams, 'json', ['groups' => 'favorite:list']);
+        return new JsonResponse($json, 200, [], true);
     }
 
 }

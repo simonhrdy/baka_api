@@ -14,7 +14,7 @@ class Team
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['team:list', 'game:list', 'player:list'])]
+    #[Groups(['team:list', 'game:list', 'player:list','favorite:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]

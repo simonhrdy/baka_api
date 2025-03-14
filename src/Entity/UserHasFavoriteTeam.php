@@ -12,15 +12,13 @@ class UserHasFavoriteTeam
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['list:list'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'userHasFavoriteTeams')]
-    #[Groups(['list:list'])]
     private ?User $id_user = null;
 
     #[ORM\ManyToOne(inversedBy: 'userHasFavoriteTeams')]
-    #[Groups(['list:list'])]
+    #[Groups(['favorite:list'])]
     private ?Team $team_id = null;
 
     public function getId(): ?int

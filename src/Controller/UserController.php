@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Team;
 use App\Entity\User;
+use App\Entity\UserHasFavoriteTeam;
+use App\Repository\TeamRepository;
 use App\Repository\UserHasFavoriteTeamRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -189,5 +192,42 @@ class UserController extends AbstractController
         $json = $serializer->serialize($favoriteTeams, 'json', ['groups' => 'favorite:list']);
         return new JsonResponse($json, 200, [], true);
     }
+
+    #[Route('/favorite-teams', methods: ['POST'])]
+    #[OA\Tag(name: 'User')]
+    public function toggleFavoriteTeam(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $user = $this->getUser();
+        $teamId = $data['team_id'];
+
+        $team = $entityManager->getRepository(Team::class)->find($teamId);
+
+        if (!$team) {
+            return $this->json(['error' => 'Team not found'], 404);
+        }
+
+        $favoriteTeamRepo = $entityManager->getRepository(UserHasFavoriteTeam::class);
+        $existingFavorite = $favoriteTeamRepo->findOneBy([
+            'idUser' => $user,
+            'teamId' => $team
+        ]);
+
+        if ($existingFavorite) {
+            $entityManager->remove($existingFavorite);
+            $entityManager->flush();
+            return $this->json(['message' => 'Team removed from favorites'], 200);
+        } else {
+            $userHasFavoriteTeam = new UserHasFavoriteTeam();
+            $userHasFavoriteTeam->setIdUser($user);
+            $userHasFavoriteTeam->setTeamId($team);
+
+            $entityManager->persist($userHasFavoriteTeam);
+            $entityManager->flush();
+
+            return $this->json(['message' => 'Team added to favorites'], 201);
+        }
+    }
+
 
 }

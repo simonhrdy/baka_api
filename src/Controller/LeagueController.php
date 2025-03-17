@@ -6,6 +6,8 @@ use App\Entity\Game;
 use App\Entity\League;
 use App\Repository\GameRepository;
 use App\Repository\LeagueRepository;
+use App\Repository\SeasonHasTeamsRepository;
+use App\Repository\SeasonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -116,16 +118,49 @@ class LeagueController extends AbstractController
         return new JsonResponse($json, 200, [], true);
     }
 
-    #[Route('/api/league/{id}/teams', name: 'league_teams', methods: ['GET'])]
-    #[OA\Tag(name: 'League')]
-    public function getTeamsWithGames(int $id, LeagueRepository $leagueRepository): JsonResponse
-    {
-        $league = $leagueRepository->findTeamsWithGamesByLeagueId($id);
-
+    #[Route('/teams/{id}', name: 'get_league_info', methods: ['GET'])]
+    public function getLeagueInfo(
+        int $id,
+        LeagueRepository $leagueRepository,
+        SeasonRepository $seasonRepository,
+        SeasonHasTeamsRepository $seasonHasTeamsRepository
+    ): JsonResponse {
+        $league = $leagueRepository->find($id);
         if (!$league) {
             return $this->json(['error' => 'League not found'], 404);
         }
 
-        return $this->json($league, 200, [], ['groups' => 'team:list']);
+        $season = $seasonRepository->findOneBy(['league_id' => $league, 'is_active' => true]);
+        if (!$season) {
+            return $this->json(['error' => 'No active season found for this league'], 404);
+        }
+
+        $seasonTeams = $seasonHasTeamsRepository->findBy(['season_id' => $season]);
+        $teamsData = [];
+
+        foreach ($seasonTeams as $seasonTeam) {
+            $team = $seasonTeam->getTeamId();
+            $teamsData[] = [
+                'id' => $team->getId(),
+                'name' => $team->getName(),
+                'short_name' => $team->getShortName(),
+                'points' => $seasonTeam->getPoints(),
+            ];
+        }
+
+        return $this->json([
+            'league' => [
+                'id' => $league->getId(),
+                'name' => $league->getName(),
+                'association' => $league->getAssocation(),
+                'sport' => $league->getSport()?->getName(),
+            ],
+            'season' => [
+                'id' => $season->getId(),
+                'year_start' => $season->getYearStart()->format('Y-m-d'),
+                'year_end' => $season->getYearEnd()->format('Y-m-d'),
+            ],
+            'teams' => $teamsData,
+        ]);
     }
 }

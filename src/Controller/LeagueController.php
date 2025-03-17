@@ -118,7 +118,8 @@ class LeagueController extends AbstractController
         return new JsonResponse($json, 200, [], true);
     }
 
-    #[Route('/teams/{id}', name: 'get_league_info', methods: ['GET'])]
+    #[Route('/table/{id}', name: 'get_league_info', methods: ['GET'])]
+    #[OA\Tag(name: 'League')]
     public function getLeagueInfo(
         int $id,
         LeagueRepository $leagueRepository,

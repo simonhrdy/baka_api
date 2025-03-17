@@ -209,8 +209,8 @@ class UserController extends AbstractController
 
         $favoriteTeamRepo = $entityManager->getRepository(UserHasFavoriteTeam::class);
         $existingFavorite = $favoriteTeamRepo->findOneBy([
-            'idUser' => $user,
-            'teamId' => $team
+            'id_user' => $user,
+            'team_id' => $team
         ]);
 
         if ($existingFavorite) {

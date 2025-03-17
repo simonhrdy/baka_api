@@ -115,4 +115,17 @@ class LeagueController extends AbstractController
 
         return new JsonResponse($json, 200, [], true);
     }
+
+    #[Route('/api/league/{id}/teams', name: 'league_teams', methods: ['GET'])]
+    #[OA\Tag(name: 'League')]
+    public function getTeamsWithGames(int $id, LeagueRepository $leagueRepository): JsonResponse
+    {
+        $league = $leagueRepository->findTeamsWithGamesByLeagueId($id);
+
+        if (!$league) {
+            return $this->json(['error' => 'League not found'], 404);
+        }
+
+        return $this->json($league, 200, [], ['groups' => 'team:list']);
+    }
 }

@@ -131,4 +131,5 @@ class TeamController extends AbstractController
         $entityManager->flush();
         return $this->json(null, 204);
     }
+
 }

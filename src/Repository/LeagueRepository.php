@@ -26,6 +26,20 @@ class LeagueRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findTeamsWithGamesByLeagueId(int $leagueId)
+    {
+        return $this->createQueryBuilder('l')
+            ->leftJoin('l.seasons', 's')
+            ->leftJoin('s.teams', 't')
+            ->leftJoin('t.games_home', 'gh')
+            ->leftJoin('t.games_away', 'ga')
+            ->addSelect('s', 't', 'gh', 'ga')
+            ->where('l.id = :leagueId')
+            ->setParameter('leagueId', $leagueId)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return League[] Returns an array of League objects
     //     */

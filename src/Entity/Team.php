@@ -37,12 +37,14 @@ class Team
      * @var Collection<int, Game>
      */
     #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'home_team_id', orphanRemoval: true)]
+    #[Groups(['team:list'])]
     private Collection $games_home;
 
     /**
      * @var Collection<int, Game>
      */
     #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'away_team_id', orphanRemoval: true)]
+    #[Groups(['team:list'])]
     private Collection $games_away;
 
     #[ORM\Column(length: 255, nullable: true)]

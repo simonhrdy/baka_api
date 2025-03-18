@@ -16,6 +16,22 @@ class UserHasFavoriteTeamRepository extends ServiceEntityRepository
         parent::__construct($registry, UserHasFavoriteTeam::class);
     }
 
+    public function findFavoritesBySport(int $userId, string $sportUrl): array
+    {
+        return $this->createQueryBuilder('uht')
+            ->join('uht.team_id', 't')
+            ->join('t.seasonHasTeams', 'sht')
+            ->join('sht.season_id', 's')
+            ->join('s.league_id', 'l')
+            ->join('l.sport', 'sp')
+            ->where('uht.id_user = :userId')
+            ->andWhere('sp.url = :sportUrl')
+            ->setParameter('userId', $userId)
+            ->setParameter('sportUrl', $sportUrl)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return UserHasFavoriteTeam[] Returns an array of UserHasFavoriteTeam objects
     //     */

@@ -229,5 +229,20 @@ class UserController extends AbstractController
         }
     }
 
+    #[Route('/favorite-teams/{sport}', methods: ['GET'])]
+    #[OA\Tag(name: 'User')]
+    public function getUserFavoriteTeamsBySport(
+        string $sport,
+        UserHasFavoriteTeamRepository $userHasFavoriteTeamRepository,
+        SerializerInterface $serializer
+    ): JsonResponse {
+        $user = $this->getUser();
+        $favoriteTeams = $userHasFavoriteTeamRepository->findFavoritesBySport($user->getId(), $sport);
+
+        $json = $serializer->serialize($favoriteTeams, 'json', ['groups' => 'favorite:list']);
+
+        return new JsonResponse($json, 200, [], true);
+    }
+
 
 }

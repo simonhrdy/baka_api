@@ -29,25 +29,6 @@ class PlayerHistoryController extends AbstractController
         return new JsonResponse($json, 200, [], true);
     }
 
-    #[Route('/{id}', methods: ['GET'])]
-    #[OA\Response(
-        response: 200,
-        description: 'Get player stats by player ID',
-    )]
-    #[OA\Tag(name: 'PlayerStats')]
-    public function getPlayerStats(int $id, PlayerStatsRepository $playerStatsRepository, SerializerInterface $serializer): JsonResponse
-    {
-        $playerStats = $playerStatsRepository->findOneBy(['player_id' => $id]);
-
-        if (!$playerStats) {
-            return new JsonResponse(['error' => 'Player stats not found'], 404);
-        }
-
-        $json = $serializer->serialize($playerStats, 'json', ['groups' => 'stats:list']);
-
-        return new JsonResponse($json, 200, [], true);
-    }
-
     #[Route('', methods: ['POST'])]
     #[OA\Tag(name: 'PlayerHistory')]
     public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse

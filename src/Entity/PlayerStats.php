@@ -12,11 +12,10 @@ class PlayerStats
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['list:list'])]
+    #[Groups(['list:list', 'stats:list'])]
     private ?int $id = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[Groups(['stats:list'])]
     private ?Player $player_id = null;
 
     #[ORM\Column(nullable: true)]

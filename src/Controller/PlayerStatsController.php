@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/player-stats', name: 'player_stats_')]
 class PlayerStatsController extends AbstractController
@@ -19,7 +20,6 @@ class PlayerStatsController extends AbstractController
         response: 200,
         description: 'Get all player stats',
     )]
-    #[OA\Tag(name: 'PlayerStats')]
     public function list(EntityManagerInterface $entityManager): JsonResponse
     {
         $playerStats = $entityManager->getRepository(PlayerStats::class)->findAll();
@@ -32,9 +32,10 @@ class PlayerStatsController extends AbstractController
         description: 'Get player stats by ID',
     )]
     #[OA\Tag(name: 'PlayerStats')]
-    public function getPlayerStats(PlayerStats $playerStats): JsonResponse
+    public function getPlayerStats(PlayerStats $playerStats, SerializerInterface $serializer): JsonResponse
     {
-        return $this->json($playerStats, 200);
+        $json = $serializer->serialize($playerStats, 'json', ['groups' => 'stats:list']);
+        return new JsonResponse($json, 200, [], true);
     }
 
     #[Route('', methods: ['POST'])]

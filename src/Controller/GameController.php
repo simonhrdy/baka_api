@@ -140,4 +140,14 @@ class GameController extends AbstractController
 
         return $this->json($games, 200, [], ['groups' => 'game:list']);
     }
+
+    #[Route('/{playerId}/last-5-completed-games', name: 'get_last_5_completed_games_by_player', methods: ['GET'])]
+    public function getLastFiveCompletedGamesByPlayer(int $playerId, GameRepository $gameRepository, SerializerInterface $serializer): JsonResponse
+    {
+        $games = $gameRepository->findLastFiveCompletedGamesByPlayerId($playerId);
+
+        $data = $serializer->serialize($games, 'json', ['groups' => 'game:list']);
+
+        return new JsonResponse($data, 200, [], true);
+    }
 }

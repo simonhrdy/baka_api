@@ -58,6 +58,23 @@ class GameRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findLastFiveCompletedGamesByPlayerId(int $playerId)
+    {
+        return $this->createQueryBuilder('g')
+            ->innerJoin('g.home_team_id', 'home_team')
+            ->innerJoin('g.away_team_id', 'away_team')
+            ->innerJoin('home_team.players', 'home_players')
+            ->innerJoin('away_team.players', 'away_players')
+            ->where('home_players.id = :playerId OR away_players.id = :playerId')
+            ->andWhere('g.status = :status')
+            ->setParameter('playerId', $playerId)
+            ->setParameter('status', 1) // Status::COMPLETED
+            ->orderBy('g.date_of_game', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Game[] Returns an array of Game objects
     //     */

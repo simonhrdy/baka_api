@@ -32,9 +32,8 @@ class PlayerHistoryController extends AbstractController
     #[Route('/{id}', methods: ['GET'])]
     #[OA\Response(
         response: 200,
-        description: 'Get player history by ID',
+        description: 'Get player stats by player ID',
     )]
-    #[OA\Tag(name: 'PlayerHistory')]
     #[OA\Tag(name: 'PlayerStats')]
     public function getPlayerStats(int $id, PlayerStatsRepository $playerStatsRepository, SerializerInterface $serializer): JsonResponse
     {

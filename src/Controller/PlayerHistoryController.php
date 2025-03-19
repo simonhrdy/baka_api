@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\PlayerHistory;
+use App\Repository\PlayerStatsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -34,9 +35,17 @@ class PlayerHistoryController extends AbstractController
         description: 'Get player history by ID',
     )]
     #[OA\Tag(name: 'PlayerHistory')]
-    public function getPlayerHistory(PlayerHistory $playerHistory, SerializerInterface $serializer): JsonResponse
+    #[OA\Tag(name: 'PlayerStats')]
+    public function getPlayerStats(int $id, PlayerStatsRepository $playerStatsRepository, SerializerInterface $serializer): JsonResponse
     {
-        $json = $serializer->serialize($playerHistory, 'json', ['groups' => 'list:list']);
+        $playerStats = $playerStatsRepository->findOneBy(['player_id' => $id]);
+
+        if (!$playerStats) {
+            return new JsonResponse(['error' => 'Player stats not found'], 404);
+        }
+
+        $json = $serializer->serialize($playerStats, 'json', ['groups' => 'stats:list']);
+
         return new JsonResponse($json, 200, [], true);
     }
 

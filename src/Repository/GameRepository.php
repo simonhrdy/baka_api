@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Game;
+use App\Enum\Status;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

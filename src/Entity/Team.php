@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
@@ -38,6 +39,7 @@ class Team
      */
     #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'home_team_id', orphanRemoval: true)]
     #[Groups(['team:list'])]
+    #[MaxDepth(1)]
     private Collection $games_home;
 
     /**
@@ -45,6 +47,7 @@ class Team
      */
     #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'away_team_id', orphanRemoval: true)]
     #[Groups(['team:list'])]
+    #[MaxDepth(1)]
     private Collection $games_away;
 
     #[ORM\Column(length: 255, nullable: true)]

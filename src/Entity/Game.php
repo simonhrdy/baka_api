@@ -23,12 +23,12 @@ class Game
 
     #[ORM\ManyToOne(inversedBy: 'games')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['game:list', 'team:list'])]
+    #[Groups(['game:list'])]
     private ?Team $home_team_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'games')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['game:list', 'team:list'])]
+    #[Groups(['game:list'])]
     private ?Team $away_team_id = null;
 
     #[ORM\Column(nullable: true)]
@@ -40,7 +40,7 @@ class Game
     private ?array $parametrs = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['game:list' , 'team:list'])]
+    #[Groups(['game:list'])]
     private DateTimeInterface $date_of_game;
 
     #[ORM\ManyToOne(inversedBy: 'games')]
@@ -57,7 +57,7 @@ class Game
     private ?League $league_id = null;
 
     #[ORM\Column(type: 'integer', enumType: Status::class, options: ['default' => 0])]
-    #[Groups(['game:list', 'team:list'])]
+    #[Groups(['game:list'])]
     private Status $status = Status::NOT_STARTED;
 
     public function __construct()
@@ -154,15 +154,5 @@ class Game
         $this->league_id = $league_id;
 
         return $this;
-    }
-
-    public function getStatus(): Status
-    {
-        return $this->status;
-    }
-
-    public function setStatus(Status $status): void
-    {
-        $this->status = $status;
     }
 }

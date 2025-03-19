@@ -123,11 +123,20 @@ class GameController extends AbstractController
         return new JsonResponse($json, 200, [], true);
     }
 
-    #[Route('/{id}/games', name: 'team_games', methods: ['GET'])]
+    #[Route('/{id}/schedule', name: 'team_games', methods: ['GET'])]
     #[OA\Tag(name: 'Game')]
     public function getLastFiveGames(int $id, GameRepository $gameRepository): JsonResponse
     {
         $games = $gameRepository->findLastFiveGamesByTeamAndStatus($id);
+
+        return $this->json($games, 200, [], ['groups' => 'game:list']);
+    }
+
+    #[Route('/{id}/results', name: 'team_games_results', methods: ['GET'])]
+    #[OA\Tag(name: 'Game')]
+    public function getFiveResults(int $id, GameRepository $gameRepository): JsonResponse
+    {
+        $games = $gameRepository->findFiveResult($id);
 
         return $this->json($games, 200, [], ['groups' => 'game:list']);
     }

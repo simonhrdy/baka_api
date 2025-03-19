@@ -45,6 +45,19 @@ class GameRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findFiveResult(int $teamId): array
+    {
+        return $this->createQueryBuilder('g')
+            ->where('g.home_team_id = :teamId OR g.away_team_id = :teamId')
+            ->andWhere('g.status = :status')
+            ->setParameter('teamId', $teamId)
+            ->setParameter('status', Status::COMPLETED)
+            ->orderBy('g.date_of_game', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Game[] Returns an array of Game objects
     //     */

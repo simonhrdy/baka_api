@@ -142,6 +142,7 @@ class GameController extends AbstractController
     }
 
     #[Route('/{playerId}/last-5-completed-games', name: 'get_last_5_completed_games_by_player', methods: ['GET'])]
+    #[OA\Tag(name: 'Game')]
     public function getLastFiveCompletedGamesByPlayer(int $playerId, GameRepository $gameRepository, SerializerInterface $serializer): JsonResponse
     {
         $games = $gameRepository->findLastFiveCompletedGamesByPlayerId($playerId);

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\Status;
 use App\Repository\GameRepository;
 use DateTime;
 use DateTimeInterface;
@@ -22,12 +23,12 @@ class Game
 
     #[ORM\ManyToOne(inversedBy: 'games')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['game:list'])]
+    #[Groups(['game:list', 'team:list'])]
     private ?Team $home_team_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'games')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['game:list'])]
+    #[Groups(['game:list', 'team:list'])]
     private ?Team $away_team_id = null;
 
     #[ORM\Column(nullable: true)]
@@ -39,7 +40,7 @@ class Game
     private ?array $parametrs = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['game:list'])]
+    #[Groups(['game:list' , 'team:list'])]
     private DateTimeInterface $date_of_game;
 
     #[ORM\ManyToOne(inversedBy: 'games')]
@@ -54,6 +55,10 @@ class Game
     #[ORM\JoinColumn(name: 'league_id', referencedColumnName: 'id')]
     #[Groups(['game:list'])]
     private ?League $league_id = null;
+
+    #[ORM\Column(type: 'integer', enumType: Status::class, options: ['default' => 0])]
+    #[Groups(['game:list', 'team:list'])]
+    private Status $status = Status::NOT_STARTED;
 
     public function __construct()
     {
@@ -149,5 +154,15 @@ class Game
         $this->league_id = $league_id;
 
         return $this;
+    }
+
+    public function getStatus(): Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(Status $status): void
+    {
+        $this->status = $status;
     }
 }

@@ -34,9 +34,17 @@ class Player
     #[Groups(['player:list'])]
     private ?Team $team_id = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: Country::class)]
     #[Groups(['player:list'])]
-    private ?Country $country_id = null;
+    private ?Country $country = null;
+
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    #[Groups(['player:list'])]
+    private ?int $number = null;
+
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    #[Groups(['player:list'])]
+    private ?string $position = null;
 
     /**
      * @var Collection<int, PlayerHistory>
@@ -104,17 +112,7 @@ class Player
         return $this;
     }
 
-    public function getCountryId(): ?Country
-    {
-        return $this->country_id;
-    }
 
-    public function setCountryId(?Country $country_id): static
-    {
-        $this->country_id = $country_id;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, PlayerHistory>
@@ -144,5 +142,35 @@ class Player
         }
 
         return $this;
+    }
+
+    public function getNumber(): ?int
+    {
+        return $this->number;
+    }
+
+    public function setNumber(?int $number): void
+    {
+        $this->number = $number;
+    }
+
+    public function getPosition(): ?string
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?string $position): void
+    {
+        $this->position = $position;
+    }
+
+    public function getCountry(): ?Country
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?Country $country): void
+    {
+        $this->country = $country;
     }
 }

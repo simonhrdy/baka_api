@@ -38,7 +38,7 @@ class PlayerStatsController extends AbstractController
         $playerStats = $playerStatsRepository->findOneBy(['player_id' => $id]);
 
         if (!$playerStats) {
-            return new JsonResponse(['error' => 'Player stats not found'], 404);
+            return new JsonResponse([], 200);
         }
 
         $json = $serializer->serialize($playerStats, 'json', ['groups' => 'stats:list']);

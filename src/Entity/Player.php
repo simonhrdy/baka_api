@@ -39,11 +39,11 @@ class Player
     private ?Country $country = null;
 
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    #[Groups(['player:list'])]
+    #[Groups(['player:list', 'team:list'])]
     private ?int $number = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    #[Groups(['player:list'])]
+    #[Groups(['player:list', 'team:list'])]
     private ?string $position = null;
 
     /**

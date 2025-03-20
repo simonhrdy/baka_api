@@ -3,10 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Game;
-use App\Entity\Season;
 use App\Entity\GameAnalysis;
 use App\Entity\GameBetting;
 use App\Entity\Lineup;
+use App\Entity\Season;
 use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -159,7 +159,7 @@ class GameController extends AbstractController
     #[OA\Tag(name: 'Game')]
     public function getLineup(Game $game, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
     {
-        $lineup = $entityManager->getRepository(GameLineup::class)->findOneBy(['game' => $game]);
+        $lineup = $entityManager->getRepository(Lineup::class)->findOneBy(['game' => $game]);
 
         if (!$lineup) {
             return $this->json(['error' => 'No lineup found for this game'], 404);

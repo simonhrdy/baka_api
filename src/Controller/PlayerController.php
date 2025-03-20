@@ -114,9 +114,9 @@ class PlayerController extends AbstractController
 
     #[Route('/{id}/matches', methods: ['GET'])]
     #[OA\Tag(name: 'Player')]
-    public function getPlayerMatches(int $playerId, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
+    public function getPlayerMatches(int $id, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
     {
-        $player = $entityManager->getRepository(Player::class)->find($playerId);
+        $player = $entityManager->getRepository(Player::class)->find($id);
         if (!$player) {
             return $this->json(['error' => 'Player not found'], 404);
         }

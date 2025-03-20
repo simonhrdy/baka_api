@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Game;
 use App\Entity\Season;
+use App\Entity\GameAnalysis;
+use App\Entity\GameBetting;
+use App\Entity\Lineup;
 use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -150,5 +153,47 @@ class GameController extends AbstractController
         $data = $serializer->serialize($games, 'json', ['groups' => 'game:list']);
 
         return new JsonResponse($data, 200, [], true);
+    }
+
+    #[Route('/{id}/getLineup', methods: ['GET'])]
+    #[OA\Tag(name: 'Game')]
+    public function getLineup(Game $game, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $lineup = $entityManager->getRepository(GameLineup::class)->findOneBy(['game' => $game]);
+
+        if (!$lineup) {
+            return $this->json(['error' => 'No lineup found for this game'], 404);
+        }
+
+        $json = $serializer->serialize($lineup, 'json');
+        return new JsonResponse($json, 200, [], true);
+    }
+
+    #[Route('/{id}/getBetting', methods: ['GET'])]
+    #[OA\Tag(name: 'Game')]
+    public function getBetting(Game $game, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $betting = $entityManager->getRepository(GameBetting::class)->findOneBy(['game' => $game]);
+
+        if (!$betting) {
+            return $this->json(['error' => 'No betting tips found for this game'], 404);
+        }
+
+        $json = $serializer->serialize($betting, 'json');
+        return new JsonResponse($json, 200, [], true);
+    }
+
+    #[Route('/{id}/getAnalysis', methods: ['GET'])]
+    #[OA\Tag(name: 'Game')]
+    public function getAnalysis(Game $game, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $analysis = $entityManager->getRepository(GameAnalysis::class)->findOneBy(['game' => $game]);
+
+        if (!$analysis) {
+            return $this->json(['error' => 'No analysis found for this game'], 404);
+        }
+
+        $json = $serializer->serialize($analysis, 'json');
+        return new JsonResponse($json, 200, [], true);
     }
 }

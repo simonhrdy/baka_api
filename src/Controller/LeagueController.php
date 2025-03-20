@@ -146,6 +146,7 @@ class LeagueController extends AbstractController
                 'name' => $team->getName(),
                 'short_name' => $team->getShortName(),
                 'points' => $seasonTeam->getPoints(),
+                'image_src' => $team->getImageSrc() ?? ''
             ];
         }
 

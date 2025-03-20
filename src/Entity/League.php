@@ -41,6 +41,7 @@ class League
     private ?Country $country_id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['league:list'])]
     private ?string $image_src = null;
 
     public function __construct()

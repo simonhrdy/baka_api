@@ -159,7 +159,7 @@ class GameController extends AbstractController
     #[OA\Tag(name: 'Game')]
     public function getLineup(Game $game, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
     {
-        $lineup = $entityManager->getRepository(Lineup::class)->findOneBy(['game' => $game]);
+        $lineup = $entityManager->getRepository(Lineup::class)->findBy(['game' => $game]);
 
         if (!$lineup) {
             return $this->json(['error' => 'No lineup found for this game'], 404);

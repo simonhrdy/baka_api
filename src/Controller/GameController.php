@@ -51,23 +51,6 @@ class GameController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['GET'])]
-    #[OA\Response(
-        response: 200,
-        description: 'Get game by ID',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'id', type: 'integer', example: 1),
-                new OA\Property(property: 'home_team_id', type: 'array', items: new OA\Items(type: 'integer'), example: [1]),
-                new OA\Property(property: 'away_team_id', type: 'array', items: new OA\Items(type: 'integer'), example: [1]),
-                new OA\Property(property: 'lap', type: 'integer', example: 1),
-                new OA\Property(property: 'supervisor_id', type: 'integer', example: null, nullable: true),
-                new OA\Property(property: 'parametrs', type: 'array', items: new OA\Items(type: 'object'), example: [["param1" => "value1", "param2" => "value2"]]),
-                new OA\Property(property: 'date_of_game', type: 'string', format: 'date-time', example: '2025-02-21T15:43:28+00:00'),
-                new OA\Property(property: 'league_id', type: 'array', items: new OA\Items(type: 'integer'), example: [1]),
-            ],
-            type: 'object'
-        )
-    )]
     #[OA\Tag(name: 'Game')]
     public function getGame(Game $game, SerializerInterface $serializer): JsonResponse
     {

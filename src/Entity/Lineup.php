@@ -17,7 +17,6 @@ class Lineup
 
     #[ORM\ManyToOne(targetEntity: Game::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['lineup:list'])]
     private ?Game $game = null;
 
     #[ORM\ManyToOne(targetEntity: Team::class)]

@@ -15,7 +15,7 @@ class Player
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['player:list', 'team:list'])]
+    #[Groups(['player:list', 'team:list', 'lineup:list'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -23,11 +23,11 @@ class Player
     private ?\DateTimeInterface $birthdate = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['player:list', 'list:list', 'team:list'])]
+    #[Groups(['player:list', 'list:list', 'team:list', 'lineup:list'])]
     private ?string $first_name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['player:list', 'list:list', 'team:list'])]
+    #[Groups(['player:list', 'list:list', 'team:list', 'lineup:list'])]
     private ?string $last_name = null;
 
     #[ORM\ManyToOne(inversedBy: 'players')]
@@ -39,11 +39,11 @@ class Player
     private ?Country $country = null;
 
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    #[Groups(['player:list', 'team:list'])]
+    #[Groups(['player:list', 'team:list', 'lineup:list'])]
     private ?int $number = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    #[Groups(['player:list', 'team:list'])]
+    #[Groups(['player:list', 'team:list', 'lineup:list'])]
     private ?string $position = null;
 
     /**

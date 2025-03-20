@@ -165,7 +165,7 @@ class GameController extends AbstractController
             return $this->json(['error' => 'No lineup found for this game'], 404);
         }
 
-        $json = $serializer->serialize($lineup, 'json');
+        $json = $serializer->serialize($lineup, 'json', ['groups' => 'lineup:list']);
         return new JsonResponse($json, 200, [], true);
     }
 
@@ -179,7 +179,7 @@ class GameController extends AbstractController
             return $this->json(['error' => 'No betting tips found for this game'], 404);
         }
 
-        $json = $serializer->serialize($betting, 'json');
+        $json = $serializer->serialize($betting, 'json', ['groups' => 'betting:list']);
         return new JsonResponse($json, 200, [], true);
     }
 
@@ -193,7 +193,7 @@ class GameController extends AbstractController
             return $this->json(['error' => 'No analysis found for this game'], 404);
         }
 
-        $json = $serializer->serialize($analysis, 'json');
+        $json = $serializer->serialize($analysis, 'json', ['groups' => 'analysis:list']);
         return new JsonResponse($json, 200, [], true);
     }
 }

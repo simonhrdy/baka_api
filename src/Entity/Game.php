@@ -57,7 +57,7 @@ class Game
     private ?League $league_id = null;
 
     #[ORM\Column(type: 'integer', enumType: Status::class, options: ['default' => 0])]
-    #[Groups(['game:list'])]
+    #[Groups(['game:list', 'player_games:list'])]
     private Status $status = Status::NOT_STARTED;
 
     public function __construct()
@@ -154,5 +154,15 @@ class Game
         $this->league_id = $league_id;
 
         return $this;
+    }
+
+    public function getStatus(): Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(Status $status): void
+    {
+        $this->status = $status;
     }
 }

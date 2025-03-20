@@ -121,7 +121,11 @@ class PlayerController extends AbstractController
             return $this->json(['error' => 'Player not found'], 404);
         }
 
-        $matches = $entityManager->getRepository(Lineup::class)->findBy(['player' => $player]);
+        $matches = $entityManager->getRepository(Lineup::class)->findBy(
+            ['player' => $player],
+            ['id' => 'DESC'],
+            5
+        );
         $json = $serializer->serialize($matches, 'json', ['groups' => 'player_games:list']);
         return new JsonResponse($json, 200, [], true);
     }

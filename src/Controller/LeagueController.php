@@ -155,6 +155,7 @@ class LeagueController extends AbstractController
                 'name' => $league->getName(),
                 'association' => $league->getAssocation(),
                 'sport' => $league->getSport()?->getName(),
+                'image_src' => $league->getImageSrc() ?? '',
             ],
             'season' => [
                 'id' => $season->getId(),

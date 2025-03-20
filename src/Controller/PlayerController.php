@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Lineup;
 use App\Entity\Player;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -108,5 +109,20 @@ class PlayerController extends AbstractController
         $entityManager->remove($player);
         $entityManager->flush();
         return $this->json(null, 204);
+    }
+
+
+    #[Route('/{id}/matches', methods: ['GET'])]
+    #[OA\Tag(name: 'Player')]
+    public function getPlayerMatches(int $playerId, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $player = $entityManager->getRepository(Player::class)->find($playerId);
+        if (!$player) {
+            return $this->json(['error' => 'Player not found'], 404);
+        }
+
+        $matches = $entityManager->getRepository(Lineup::class)->findBy(['player' => $player]);
+        $json = $serializer->serialize($matches, 'json', ['groups' => 'player_games:list']);
+        return new JsonResponse($json, 200, [], true);
     }
 }

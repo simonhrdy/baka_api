@@ -12,11 +12,12 @@ class Lineup
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['lineup:list'])]
+    #[Groups(['lineup:list', 'player_games:list'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Game::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['player_games:list'])]
     private ?Game $game = null;
 
     #[ORM\ManyToOne(targetEntity: Team::class)]

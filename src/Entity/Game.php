@@ -18,17 +18,17 @@ class Game
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['game:list', 'referee:list', 'team:list'])]
+    #[Groups(['game:list', 'referee:list', 'team:list', 'player_games:list'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'games')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['game:list'])]
+    #[Groups(['game:list', 'player_games:list'])]
     private ?Team $home_team_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'games')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['game:list'])]
+    #[Groups(['game:list', 'player_games:list'])]
     private ?Team $away_team_id = null;
 
     #[ORM\Column(nullable: true)]
@@ -36,11 +36,11 @@ class Game
     private ?int $lap = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['game:list'])]
+    #[Groups(['game:list', 'player_games:list'])]
     private ?array $parametrs = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['game:list'])]
+    #[Groups(['game:list', 'player_games:list'])]
     private DateTimeInterface $date_of_game;
 
     #[ORM\ManyToOne(inversedBy: 'games')]

@@ -54,6 +54,7 @@ class Player
     private Collection $playerHistories;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['player:list', 'team:list', 'lineup:list'])]
     private ?string $image_src = null;
 
     public function __construct()

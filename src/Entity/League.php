@@ -40,6 +40,9 @@ class League
     #[Groups(['league:list'])]
     private ?Country $country_id = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image_src = null;
+
     public function __construct()
     {
         $this->seasons = new ArrayCollection();
@@ -127,6 +130,18 @@ class League
     public function setSport(?Sport $sport): void
     {
         $this->sport = $sport;
+    }
+
+    public function getImageSrc(): ?string
+    {
+        return $this->image_src;
+    }
+
+    public function setImageSrc(?string $image_src): static
+    {
+        $this->image_src = $image_src;
+
+        return $this;
     }
 
 

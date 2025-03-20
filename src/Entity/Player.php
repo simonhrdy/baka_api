@@ -53,6 +53,9 @@ class Player
     #[Groups(['player:list'])]
     private Collection $playerHistories;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image_src = null;
+
     public function __construct()
     {
         $this->playerHistories = new ArrayCollection();
@@ -172,5 +175,17 @@ class Player
     public function setCountry(?Country $country): void
     {
         $this->country = $country;
+    }
+
+    public function getImageSrc(): ?string
+    {
+        return $this->image_src;
+    }
+
+    public function setImageSrc(?string $image_src): static
+    {
+        $this->image_src = $image_src;
+
+        return $this;
     }
 }

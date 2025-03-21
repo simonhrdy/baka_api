@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\GameAnalysisRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: GameAnalysisRepository::class)]
 class GameAnalysis
@@ -18,6 +19,7 @@ class GameAnalysis
     private ?Game $game = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['analysis:list'])]
     private ?string $content = null;
 
     public function getId(): ?int

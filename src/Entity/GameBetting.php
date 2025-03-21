@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\GameBettingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: GameBettingRepository::class)]
 class GameBetting
@@ -18,6 +19,7 @@ class GameBetting
     private ?Game $game = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['betting:list'])]
     private ?string $content = null;
 
     public function getId(): ?int

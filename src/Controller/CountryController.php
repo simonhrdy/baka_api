@@ -109,6 +109,6 @@ class CountryController extends AbstractController
         $entityManager->remove($country);
         $entityManager->flush();
 
-        return $this->json(null, 204);
+        return $this->json(null, 201);
     }
 }

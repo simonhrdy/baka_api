@@ -47,7 +47,7 @@ class CountryController extends AbstractController
             properties: [
                 new OA\Property(property: 'id', type: 'integer', example: 1),
                 new OA\Property(property: 'name', type: 'string', example: 'Španělsko'),
-                new OA\Property(property: 'short_name', type: 'string', example: 'SPA'),
+                new OA\Property(property: 'shortName', type: 'string', example: 'SPA'),
                 new OA\Property(property: 'league', type: 'League'),
             ],
             type: 'object'

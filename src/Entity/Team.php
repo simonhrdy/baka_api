@@ -83,7 +83,7 @@ class Team
     #[Ignore]
     private Collection $userHasFavoriteTeams;
 
-    public function __construct(\Doctrine\Common\Collections\Collection $games_home)
+    public function __construct()
     {
         $this->games_away = new ArrayCollection();
         $this->players = new ArrayCollection();

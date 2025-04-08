@@ -101,6 +101,7 @@ class TeamController extends AbstractController
         $team->setShortName($data['short_name'] ?? null);
         $team->setCoach($data['coach'] ?? null);
         $team->setImageSrc($data['image_src'] ?? null);
+        $team->setStadiumId($data['stadium_id'] ?? null);
 
         $entityManager->persist($team);
         $entityManager->flush();

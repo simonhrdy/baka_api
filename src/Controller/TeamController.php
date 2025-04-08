@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Stadium;
 use App\Entity\Team;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -102,8 +103,8 @@ class TeamController extends AbstractController
         $team->setShortName($data['short_name'] ?? null);
         $team->setCoach($data['coach'] ?? null);
         $team->setImageSrc($data['image_src'] ?? null);
-        $team = $entityManager->getRepository(Team::class)->findOneBy(['id' => $data['stadium_id']]);
-        $team->setStadiumId($team ?? null);
+        $stadium = $entityManager->getRepository(Stadium::class)->findOneBy(['id' => $data['stadium_id']]);
+        $team->setStadiumId($stadium ?? null);
 
         $entityManager->persist($team);
         $entityManager->flush();

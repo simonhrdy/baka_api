@@ -98,6 +98,7 @@ class TeamController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $team = new Team();
         $team->setName($data['name']);
+        $team->setSurname($data['surname'] ?? null);
         $team->setShortName($data['short_name'] ?? null);
         $team->setCoach($data['coach'] ?? null);
         $team->setImageSrc($data['image_src'] ?? null);

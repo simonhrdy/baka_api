@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Country;
 use App\Entity\Lineup;
 use App\Entity\Player;
+use App\Entity\Team;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -78,6 +80,14 @@ class PlayerController extends AbstractController
         $player->setFirstName($data['first_name']);
         $player->setLastName($data['last_name']);
         $player->setBirthdate(new \DateTime($data['birthdate']));
+        $player->setImageSrc($data['image_src'] ?? null);
+        $player->setPosition($data['position'] ?? null);
+        $player->setNumber($data['number'] ?? null);
+        $team = $entityManager->getRepository(Team::class)->find($data['team_id'] ?? null);
+        $player->setTeamId($team ?? null);
+        $country = $entityManager->getRepository(Country::class)->find($data['country'] ?? null);
+        $player->setCountry($country ?? null);
+
 
         $entityManager->persist($player);
         $entityManager->flush();

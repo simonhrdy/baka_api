@@ -7,6 +7,9 @@ use App\Entity\GameAnalysis;
 use App\Entity\GameBetting;
 use App\Entity\Lineup;
 use App\Entity\Season;
+use App\Entity\Team;
+use App\Entity\User;
+use App\Enum\Status;
 use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -65,11 +68,24 @@ class GameController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $game = new Game();
         $game->setDateOfGame(new \DateTime($data['date_of_game']));
+        $game->setLap($data['lap'] ?? null);
+        $game->setStatus($data['status'] ?? Status::NOT_STARTED);
+
+        $user = $entityManager->getRepository(User::class)->find($data['supervisor_id'] ?? null);
+        $game->setSuperviserId($user ?? null);
+
+        $homeTeam = $entityManager->getRepository(Team::class)->find($data['home_team_id']);
+        $game->setHomeTeamId($homeTeam);
+
+        $awayTeam = $entityManager->getRepository(Team::class)->find($data['away_team_id']);
+        $game->setAwayTeamId($awayTeam);
+
+
 
         $entityManager->persist($game);
         $entityManager->flush();
 
-        return $this->json($game, 201);
+        return $this->json([], 201);
     }
 
     #[Route('/{id}', methods: ['PUT'])]

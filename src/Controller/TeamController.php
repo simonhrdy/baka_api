@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\League;
+use App\Entity\Season;
+use App\Entity\SeasonHasTeams;
 use App\Entity\Stadium;
 use App\Entity\Team;
 use Doctrine\ORM\EntityManagerInterface;
@@ -135,5 +138,46 @@ class TeamController extends AbstractController
         $entityManager->flush();
         return $this->json(null, 204);
     }
+
+    #[Route('/league/{id}', methods: ['GET'])]
+    #[OA\Tag(name: 'Team')]
+    public function getTeamsByLeague(
+        int $id,
+        SerializerInterface $serializer,
+        EntityManagerInterface $entityManager
+    ): JsonResponse {
+        $league = $entityManager->getRepository(League::class)->find($id);
+
+        if (!$league) {
+            return new JsonResponse(['error' => 'Liga nebyla nalezena.'], 404);
+        }
+
+        $activeSeason = $entityManager->getRepository(Season::class)->findOneBy([
+            'league_id' => $league,
+            'is_active' => true,
+        ]);
+
+        if (!$activeSeason) {
+            return new JsonResponse([]);
+        }
+
+        $seasonHasTeams = $entityManager->getRepository(SeasonHasTeams::class)
+            ->findBy(['season_id' => $activeSeason]);
+
+        if (count($seasonHasTeams) < 2) {
+            return new JsonResponse([]);
+        }
+
+        $teams = array_map(function (SeasonHasTeams $item) {
+            $team = $item->getTeamId();
+            return [
+                'id' => $team->getId(),
+                'name' => $team->getName(),
+            ];
+        }, $seasonHasTeams);
+
+        return new JsonResponse($teams, 200);
+    }
+
 
 }

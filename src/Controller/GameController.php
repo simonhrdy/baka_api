@@ -201,6 +201,7 @@ class GameController extends AbstractController
     {
         $user = $entityManager->getRepository(User::class)->find($id);
         $dateObject = \DateTime::createFromFormat('Y-m-d', $date);
+        var_dump($dateObject);
         $games = $entityManager->getRepository(Game::class)->findBy([
             'superviser_id' => $user,
             'date_of_game' => $dateObject,

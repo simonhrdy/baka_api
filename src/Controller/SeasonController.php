@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\League;
 use App\Entity\Season;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -75,6 +76,11 @@ class SeasonController extends AbstractController
         $season->setActive($data['is_active']);
         $season->setYearStart(new \DateTime($data['year_start']));
         $season->setYearEnd(new \DateTime($data['year_end']));
+
+        $league = $entityManager->getRepository(League::class)->find($data['league_id']);
+        if($league){
+            $season->setLeagueId($league);
+        }
 
         $entityManager->persist($season);
         $entityManager->flush();

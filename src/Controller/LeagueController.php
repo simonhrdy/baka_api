@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Country;
 use App\Entity\Game;
 use App\Entity\League;
+use App\Entity\Sport;
 use App\Repository\GameRepository;
 use App\Repository\LeagueRepository;
 use App\Repository\SeasonHasTeamsRepository;
@@ -79,6 +81,16 @@ class LeagueController extends AbstractController
         $league = new League();
         $league->setName($data['name'] ?? '');
         $league->setAssocation($data['assocation'] ?? null);
+
+        $sport = $entityManager->getRepository(Sport::class)->find($data['sport_id'] ?? null);
+        if ($sport) {
+            $league->setSport($sport);
+        }
+
+        $country = $entityManager->getRepository(Country::class)->find($data['country_id'] ?? null);
+        if ($country) {
+            $league->setCountryId($country);
+        }
 
         $entityManager->persist($league);
         $entityManager->flush();

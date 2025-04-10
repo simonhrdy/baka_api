@@ -75,6 +75,21 @@ class GameRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findBySuperviserAndDate(int $superviserId, \DateTimeInterface $date): array
+    {
+        $startDate = (clone $date)->setTime(0, 0, 0);
+        $endDate = (clone $date)->setTime(23, 59, 59);
+
+        return $this->createQueryBuilder('g')
+            ->where('g.superviser_id = :superviserId')
+            ->andWhere('g.date_of_game BETWEEN :start AND :end')
+            ->setParameter('superviserId', $superviserId)
+            ->setParameter('start', $startDate)
+            ->setParameter('end', $endDate)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Game[] Returns an array of Game objects
     //     */

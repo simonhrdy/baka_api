@@ -195,12 +195,16 @@ class GameController extends AbstractController
         return new JsonResponse($json, 200, [], true);
     }
 
-    #[Route('/viser/{id}', methods: ['GET'])]
+    #[Route('/viser/{id}/{date}', methods: ['GET'])]
     #[OA\Tag(name: 'Game')]
-    public function getGameBySuperVisor(int $id, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
+    public function getGameBySuperVisor(int $id,string $date, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
     {
         $user = $entityManager->getRepository(User::class)->find($id);
-        $games = $entityManager->getRepository(Game::class)->findBy(['superviser_id' => $user]);
+        $dateObject = \DateTime::createFromFormat('Y-m-d', $date);
+        $games = $entityManager->getRepository(Game::class)->findBy([
+            'superviser_id' => $user,
+            'date_of_game' => $dateObject,
+        ]);
         $json = $serializer->serialize($games, 'json', ['groups' => 'game:list']);
         return new JsonResponse($json, 200, [], true);
     }

@@ -57,7 +57,8 @@ class UserController extends AbstractController
         $user = new User();
         $user->setName($data['name']);
         $user->setEmail($data['email']);
-        $user->setPassword($data['password']);
+        $user->setPassword($data['password'] ?? null);
+        $user->setRoles($data['roles'] ?? []);
 
         $entityManager->persist($user);
         $entityManager->flush();

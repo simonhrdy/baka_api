@@ -194,4 +194,14 @@ class GameController extends AbstractController
         $json = $serializer->serialize($analysis, 'json', ['groups' => 'analysis:list']);
         return new JsonResponse($json, 200, [], true);
     }
+
+    #[Route('/viser/{id}', methods: ['GET'])]
+    #[OA\Tag(name: 'Game')]
+    public function getGameBySuperVisor(int $id, SerializerInterface $serializer, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $user = $entityManager->getRepository(User::class)->find($id);
+        $games = $entityManager->getRepository(Game::class)->findBy(['superviserId' => $user]);
+        $json = $serializer->serialize($games, 'json', ['groups' => 'game:list']);
+        return new JsonResponse($json, 200, [], true);
+    }
 }

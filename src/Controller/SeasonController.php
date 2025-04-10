@@ -85,7 +85,7 @@ class SeasonController extends AbstractController
         $entityManager->persist($season);
         $entityManager->flush();
 
-        return $this->json($season, 201);
+        return $this->json([], 201);
     }
 
     #[Route('/{id}', methods: ['PUT'])]

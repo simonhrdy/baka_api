@@ -95,7 +95,7 @@ class LeagueController extends AbstractController
         $entityManager->persist($league);
         $entityManager->flush();
 
-        return $this->json($league, 201);
+        return $this->json([],201);
     }
 
     #[Route('/{id}', methods: ['PUT'])]

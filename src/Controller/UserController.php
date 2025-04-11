@@ -245,5 +245,11 @@ class UserController extends AbstractController
         return new JsonResponse($json, 200, [], true);
     }
 
+    #[Route('/{id}', methods: ['GET'])]
+    #[OA\Tag(name: 'User')]
+    public function getPlayer(User $user): JsonResponse
+    {
+        return $this->json($user, 200, [], ['groups' => 'list:list']);
+    }
 
 }

@@ -74,26 +74,42 @@ class PlayerController extends AbstractController
     #[OA\Tag(name: 'Player')]
     public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $data = $request->request->all();
+        $file = $request->files->get('image');
 
         $player = new Player();
-        $player->setFirstName($data['first_name']);
-        $player->setLastName($data['last_name']);
-        $player->setBirthdate(new \DateTime($data['birthdate']));
-        $player->setImageSrc($data['image_src'] ?? null);
+        $player->setFirstName($data['first_name'] ?? '');
+        $player->setLastName($data['last_name'] ?? '');
+
+        if (!empty($data['birthdate'])) {
+            try {
+                $player->setBirthdate(new \DateTime($data['birthdate']));
+            } catch (\Exception $e) {
+                return $this->json(['error' => 'Neplatné datum narození'], 400);
+            }
+        }
+
         $player->setPosition($data['position'] ?? null);
-        $player->setNumber($data['number'] ?? null);
+        $player->setNumber(isset($data['number']) ? (int)$data['number'] : null);
+
+        if ($file) {
+            $filename = uniqid('player_', true) . '.' . $file->guessExtension();
+            $file->move($this->getParameter('upload_directory'), $filename);
+            $player->setImageSrc('/uploads/' . $filename);
+        }
+
         $team = $entityManager->getRepository(Team::class)->find($data['team_id'] ?? null);
         $player->setTeamId($team ?? null);
+
         $country = $entityManager->getRepository(Country::class)->find($data['country'] ?? null);
         $player->setCountry($country ?? null);
-
 
         $entityManager->persist($player);
         $entityManager->flush();
 
         return $this->json($player, 201, [], ['groups' => ['player:read']]);
     }
+
 
     #[Route('/{id}', methods: ['PUT'])]
     #[OA\Tag(name: 'Player')]

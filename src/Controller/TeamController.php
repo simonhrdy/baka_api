@@ -115,8 +115,10 @@ class TeamController extends AbstractController
             $team->setImageSrc('https://coral-app-pmzum.ondigitalocean.app/uploads/' . $filename);
         }
 
-        $stadium = $entityManager->getRepository(Stadium::class)->find($data['stadium_id'] ?? null);
-        $team->setStadiumId($stadium ?? null);
+        if (!empty($data['stadium_id'])) {
+            $stadium = $entityManager->getRepository(Stadium::class)->find($data['stadium_id']);
+            $team->setStadiumId($stadium ?? null);
+        }
 
         $entityManager->persist($team);
         $entityManager->flush();

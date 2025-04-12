@@ -86,7 +86,7 @@ class StadiumController extends AbstractController
         return $this->json(null, 204);
     }
 
-    #[Route('/available', methods: ['GET'])]
+    #[Route('/team/available', methods: ['GET'])]
     #[OA\Tag(name: 'Stadium')]
     public function available(EntityManagerInterface $entityManager): JsonResponse
     {

@@ -78,16 +78,10 @@ class PlayerController extends AbstractController
         $file = $request->files->get('image');
 
         $player = new Player();
-        $player->setFirstName($data['first_name'] ?? '');
-        $player->setLastName($data['last_name'] ?? '');
+        $player->setFirstName($data['name'] ?? '');
+        $player->setLastName($data['surname'] ?? '');
+        $player->setBirthdate($data['birthdate'] ?? null);
 
-        if (!empty($data['birthdate'])) {
-            try {
-                $player->setBirthdate(new \DateTime($data['birthdate']));
-            } catch (\Exception $e) {
-                return $this->json(['error' => 'Neplatné datum narození'], 400);
-            }
-        }
 
         $player->setPosition($data['position'] ?? null);
         $player->setNumber(isset($data['number']) ? (int)$data['number'] : null);
@@ -98,7 +92,7 @@ class PlayerController extends AbstractController
             $player->setImageSrc('/uploads/' . $filename);
         }
 
-        $team = $entityManager->getRepository(Team::class)->find($data['team_id'] ?? null);
+        $team = $entityManager->getRepository(Team::class)->find($data['team'] ?? null);
         $player->setTeamId($team ?? null);
 
         $country = $entityManager->getRepository(Country::class)->find($data['country'] ?? null);

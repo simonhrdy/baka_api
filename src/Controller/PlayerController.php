@@ -83,10 +83,11 @@ class PlayerController extends AbstractController
         $player->setBirthdate($data['birthdate'] ?? null);
 
 
-        $player->setPosition($data['position'] ?? null);
+
         $player->setNumber(isset($data['number']) ? (int)$data['number'] : null);
 
         if ($file) {
+            $player->setPosition($data['position'] ?? null);
             $filename = uniqid('player_', true) . '.' . $file->guessExtension();
             $file->move($this->getParameter('upload_directory'), $filename);
             $player->setImageSrc('/uploads/' . $filename);

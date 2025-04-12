@@ -78,6 +78,7 @@ class LeagueController extends AbstractController
     public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+
         $league = new League();
         $league->setName($data['name'] ?? '');
         $league->setAssocation($data['assocation'] ?? null);
@@ -92,10 +93,18 @@ class LeagueController extends AbstractController
             $league->setCountryId($country);
         }
 
+        if (!empty($data['imageBase64'])) {
+            $imageData = base64_decode($data['imageBase64']);
+            $filename = uniqid('league_', true) . '.jpg';
+            $path = $this->getParameter('upload_directory') . '/' . $filename;
+            file_put_contents($path, $imageData);
+            $league->setImageSrc('https://coral-app-pmzum.ondigitalocean.app/uploads/' . $filename);
+        }
+
         $entityManager->persist($league);
         $entityManager->flush();
 
-        return $this->json([],201);
+        return $this->json($league, 201, [], ['groups' => ['league:list']]);
     }
 
     #[Route('/{id}', methods: ['PUT'])]
@@ -103,13 +112,37 @@ class LeagueController extends AbstractController
     public function update(League $league, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+
         $league->setName($data['name'] ?? $league->getName());
         $league->setAssocation($data['assocation'] ?? $league->getAssocation());
 
+        if (!empty($data['sport_id'])) {
+            $sport = $entityManager->getRepository(Sport::class)->find($data['sport_id']);
+            if ($sport) {
+                $league->setSport($sport);
+            }
+        }
+
+        if (!empty($data['country_id'])) {
+            $country = $entityManager->getRepository(Country::class)->find($data['country_id']);
+            if ($country) {
+                $league->setCountryId($country);
+            }
+        }
+
+        if (!empty($data['imageBase64'])) {
+            $imageData = base64_decode($data['imageBase64']);
+            $filename = uniqid('league_', true) . '.jpg';
+            $path = $this->getParameter('upload_directory') . '/' . $filename;
+            file_put_contents($path, $imageData);
+            $league->setImageSrc('https://coral-app-pmzum.ondigitalocean.app/uploads/' . $filename);
+        }
+
         $entityManager->flush();
 
-        return $this->json($league);
+        return $this->json($league, 200, [], ['groups' => ['league:list']]);
     }
+
 
     #[Route('/{id}', methods: ['DELETE'])]
     #[OA\Tag(name: 'League')]

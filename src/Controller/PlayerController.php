@@ -112,14 +112,42 @@ class PlayerController extends AbstractController
 
         $player->setFirstName($data['first_name'] ?? $player->getFirstName());
         $player->setLastName($data['last_name'] ?? $player->getLastName());
+
         if (!empty($data['birthdate'])) {
             $player->setBirthdate(new \DateTime($data['birthdate']));
+        }
+
+        if (!empty($data['position'])) {
+            $player->setPosition($data['position']);
+        }
+
+        if (isset($data['number'])) {
+            $player->setNumber((int)$data['number']);
+        }
+
+        if (!empty($data['imageBase64'])) {
+            $imageData = base64_decode($data['imageBase64']);
+            $filename = uniqid('player_', true) . '.jpg';
+            $path = $this->getParameter('upload_directory') . '/' . $filename;
+            file_put_contents($path, $imageData);
+            $player->setImageSrc('https://coral-app-pmzum.ondigitalocean.app/uploads/' . $filename);
+        }
+
+        if (!empty($data['team_id'])) {
+            $team = $entityManager->getRepository(Team::class)->find($data['team_id']);
+            $player->setTeamId($team);
+        }
+
+        if (!empty($data['country'])) {
+            $country = $entityManager->getRepository(Country::class)->find($data['country']);
+            $player->setCountry($country);
         }
 
         $entityManager->flush();
 
         return $this->json($player, 200, [], ['groups' => ['player:read']]);
     }
+
 
     #[Route('/{id}', methods: ['DELETE'])]
     #[OA\Tag(name: 'Player')]

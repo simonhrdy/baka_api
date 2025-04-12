@@ -6,6 +6,7 @@
 parameters:
     upload_directory: '%env(UPLOAD_DIRECTORY)%'
     app.domain: '%env(APP_DOMAIN)%'
+
 services:
     # default configuration for services in *this* file
     _defaults:

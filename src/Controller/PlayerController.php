@@ -74,30 +74,28 @@ class PlayerController extends AbstractController
     #[OA\Tag(name: 'Player')]
     public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        $data = $request->request->all();
-        $file = $request->files->get('image');
+        $data = json_decode($request->getContent(), true);
 
         $player = new Player();
-        $player->setFirstName($data['name'] ?? '');
-        $player->setLastName($data['surname'] ?? '');
+        $player->setFirstName($data['first_name'] ?? '');
+        $player->setLastName($data['last_name'] ?? '');
         $player->setBirthdate($data['birthdate'] ?? null);
-
-
         $player->setPosition($data['position'] ?? null);
         $player->setNumber(isset($data['number']) ? (int)$data['number'] : null);
 
-
-        if ($file) {
-            $filename = uniqid('player_', true) . '.' . $file->guessExtension();
-            $file->move($this->getParameter('upload_directory'), $filename);
+        if (!empty($data['imageBase64'])) {
+            $imageData = base64_decode($data['imageBase64']);
+            $filename = uniqid('player_', true) . '.jpg';
+            $path = $this->getParameter('upload_directory') . '/' . $filename;
+            file_put_contents($path, $imageData);
             $player->setImageSrc('https://coral-app-pmzum.ondigitalocean.app/uploads/' . $filename);
         }
 
-        $team = $entityManager->getRepository(Team::class)->find($data['team'] ?? null);
-        $player->setTeamId($team ?? null);
+        $team = $entityManager->getRepository(Team::class)->find($data['team_id'] ?? null);
+        $player->setTeamId($team);
 
         $country = $entityManager->getRepository(Country::class)->find($data['country'] ?? null);
-        $player->setCountry($country ?? null);
+        $player->setCountry($country);
 
         $entityManager->persist($player);
         $entityManager->flush();

@@ -99,14 +99,22 @@ class TeamController extends AbstractController
     #[OA\Tag(name: 'Team')]
     public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $data = $request->request->all();
+        $file = $request->files->get('image');
+
         $team = new Team();
-        $team->setName($data['name']);
+        $team->setName($data['name'] ?? '');
         $team->setSurname($data['surname'] ?? null);
         $team->setShortName($data['short_name'] ?? null);
         $team->setCoach($data['coach'] ?? null);
-        $team->setImageSrc($data['image_src'] ?? null);
-        $stadium = $entityManager->getRepository(Stadium::class)->findOneBy(['id' => $data['stadium_id']]);
+
+        if ($file) {
+            $filename = uniqid('team_', true) . '.' . $file->guessExtension();
+            $file->move($this->getParameter('upload_directory'), $filename);
+            $team->setImageSrc('/uploads/' . $filename);
+        }
+
+        $stadium = $entityManager->getRepository(Stadium::class)->find($data['stadium_id'] ?? null);
         $team->setStadiumId($stadium ?? null);
 
         $entityManager->persist($team);
@@ -114,6 +122,7 @@ class TeamController extends AbstractController
 
         return $this->json($team, 201);
     }
+
 
     #[Route('/{id}', methods: ['PUT'])]
     #[OA\Tag(name: 'Team')]

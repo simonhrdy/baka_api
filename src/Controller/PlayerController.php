@@ -88,7 +88,6 @@ class PlayerController extends AbstractController
         if ($file) {
             $filename = uniqid('player_', true) . '.' . $file->guessExtension();
             $file->move($this->getParameter('upload_directory'), $filename);
-
             $domain = $this->getParameter('app.domain');
             $imageUrl = $domain . '/uploads/' . $filename;
             $player->setImageSrc($imageUrl);

@@ -85,4 +85,19 @@ class StadiumController extends AbstractController
 
         return $this->json(null, 204);
     }
+
+    #[Route('/available', methods: ['GET'])]
+    #[OA\Tag(name: 'Stadium')]
+    public function available(EntityManagerInterface $entityManager): JsonResponse
+    {
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('s')
+            ->from(Stadium::class, 's')
+            ->leftJoin('App\Entity\Team', 't', 'WITH', 't.stadium_id = s')
+            ->where('t.id IS NULL');
+
+        $availableStadiums = $qb->getQuery()->getResult();
+
+        return $this->json($availableStadiums, 200);
+    }
 }

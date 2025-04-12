@@ -99,8 +99,7 @@ class TeamController extends AbstractController
     #[OA\Tag(name: 'Team')]
     public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        $data = $request->request->all();
-        $file = $request->files->get('image');
+        $data = json_decode($request->getContent(), true);
 
         $team = new Team();
         $team->setName($data['name'] ?? '');
@@ -108,10 +107,12 @@ class TeamController extends AbstractController
         $team->setShortName($data['short_name'] ?? null);
         $team->setCoach($data['coach'] ?? null);
 
-        if ($file) {
-            $filename = uniqid('team_', true) . '.' . $file->guessExtension();
-            $file->move($this->getParameter('upload_directory'), $filename);
-            $team->setImageSrc('/uploads/' . $filename);
+        if (!empty($data['imageBase64'])) {
+            $imageData = base64_decode($data['imageBase64']);
+            $filename = uniqid('team_', true) . '.jpg';
+            $path = $this->getParameter('upload_directory') . '/' . $filename;
+            file_put_contents($path, $imageData);
+            $team->setImageSrc('https://coral-app-pmzum.ondigitalocean.app/uploads/' . $filename);
         }
 
         $stadium = $entityManager->getRepository(Stadium::class)->find($data['stadium_id'] ?? null);
@@ -120,8 +121,9 @@ class TeamController extends AbstractController
         $entityManager->persist($team);
         $entityManager->flush();
 
-        return $this->json($team, 201);
+        return $this->json($team, 201, [], ['groups' => ['team:list']]);
     }
+
 
 
     #[Route('/{id}', methods: ['PUT'])]
@@ -129,15 +131,30 @@ class TeamController extends AbstractController
     public function update(Team $team, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+
         $team->setName($data['name'] ?? $team->getName());
+        $team->setSurname($data['surname'] ?? $team->getSurname());
         $team->setShortName($data['short_name'] ?? $team->getShortName());
         $team->setCoach($data['coach'] ?? $team->getCoach());
-        $team->setImageSrc($data['image_src'] ?? $team->getImageSrc());
+
+        if (!empty($data['imageBase64'])) {
+            $imageData = base64_decode($data['imageBase64']);
+            $filename = uniqid('team_', true) . '.jpg';
+            $path = $this->getParameter('upload_directory') . '/' . $filename;
+            file_put_contents($path, $imageData);
+            $team->setImageSrc('https://coral-app-pmzum.ondigitalocean.app/uploads/' . $filename);
+        }
+
+        if (!empty($data['stadium_id'])) {
+            $stadium = $entityManager->getRepository(Stadium::class)->find($data['stadium_id']);
+            $team->setStadiumId($stadium);
+        }
 
         $entityManager->flush();
 
-        return $this->json($team);
+        return $this->json($team, 200, [], ['groups' => ['team:list']]);
     }
+
 
     #[Route('/{id}', methods: ['DELETE'])]
     #[OA\Tag(name: 'Team')]

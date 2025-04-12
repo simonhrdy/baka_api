@@ -81,16 +81,15 @@ class PlayerController extends AbstractController
         $player->setFirstName($data['name'] ?? '');
         $player->setLastName($data['surname'] ?? '');
         $player->setBirthdate($data['birthdate'] ?? null);
+
+
         $player->setPosition($data['position'] ?? null);
         $player->setNumber(isset($data['number']) ? (int)$data['number'] : null);
-
 
         if ($file) {
             $filename = uniqid('player_', true) . '.' . $file->guessExtension();
             $file->move($this->getParameter('upload_directory'), $filename);
-            $domain = $this->getParameter('app.domain');
-            $imageUrl = $domain . '/uploads/' . $filename;
-            $player->setImageSrc($imageUrl);
+            $player->setImageSrc('https://coral-app-pmzum.ondigitalocean.app/uploads/' . $filename);
         }
 
         $team = $entityManager->getRepository(Team::class)->find($data['team'] ?? null);

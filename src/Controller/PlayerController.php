@@ -86,6 +86,9 @@ class PlayerController extends AbstractController
         $player->setPosition($data['position'] ?? null);
         $player->setNumber(isset($data['number']) ? (int)$data['number'] : null);
 
+        $uploadDir = $this->getParameter('upload_directory');
+         dump($uploadDir); die();
+
         if ($file) {
             $filename = uniqid('player_', true) . '.' . $file->guessExtension();
             $file->move($this->getParameter('upload_directory'), $filename);

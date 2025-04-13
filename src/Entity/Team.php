@@ -14,15 +14,15 @@ class Team
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['team:list', 'game:list', 'player:list','favorite:list', 'lineup:list'])]
+    #[Groups(['team:list', 'game:list', 'player:list','favorite:list', 'lineup:list','season:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['team:list', 'game:list', 'player:list', 'list:list', 'favorite:list', 'player_games:list'])]
+    #[Groups(['team:list', 'game:list', 'player:list', 'list:list', 'favorite:list', 'player_games:list','season:list'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['team:list', 'game:list', 'player:list', 'list:list', 'favorite:list', 'player_games:list'])]
+    #[Groups(['team:list', 'game:list', 'player:list', 'list:list', 'favorite:list', 'player_games:list','season:list'])]
     private ?string $surname = null;
 
     #[ORM\Column(length: 255, nullable: true)]

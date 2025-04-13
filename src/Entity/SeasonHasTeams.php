@@ -24,7 +24,7 @@ class SeasonHasTeams
     private ?Season $season_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'seasonHasTeams')]
-    #[Groups(['list:list'])]
+    #[Groups(['list:list', 'season:list'])]
     private ?Team $team_id = null;
 
 

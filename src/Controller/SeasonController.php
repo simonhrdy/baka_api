@@ -113,18 +113,37 @@ class SeasonController extends AbstractController
     public function update(Season $season, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $season->setActive($data['is_active'] ?? $season->isActive());
+
+        $requestedActive = $data['is_active'] ?? $season->isActive();
+
+        if ($requestedActive === true && !$season->isActive()) {
+            $existingActive = $entityManager->getRepository(Season::class)->findOneBy([
+                'league_id' => $season->getLeagueId(),
+                'is_active' => true,
+            ]);
+
+            if ($existingActive && $existingActive->getId() !== $season->getId()) {
+                return $this->json([
+                    'message' => 'Tato liga již má aktivní sezónu. Nejprve ji deaktivujte.'
+                ], 400);
+            }
+        }
+
+        $season->setActive($requestedActive);
+
         if (isset($data['year_start'])) {
             $season->setYearStart(new \DateTime($data['year_start']));
         }
+
         if (isset($data['year_end'])) {
             $season->setYearEnd(new \DateTime($data['year_end']));
         }
 
         $entityManager->flush();
 
-        return $this->json($season);
+        return $this->json([], 200);
     }
+
 
     #[Route('/{id}', methods: ['DELETE'])]
     #[OA\Tag(name: 'Season')]

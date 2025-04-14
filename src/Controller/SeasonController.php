@@ -4,6 +4,10 @@ namespace App\Controller;
 
 use App\Entity\League;
 use App\Entity\Season;
+use App\Entity\SeasonHasTeams;
+use App\Repository\SeasonHasTeamsRepository;
+use App\Repository\SeasonRepository;
+use App\Repository\TeamRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -114,4 +118,66 @@ class SeasonController extends AbstractController
         $entityManager->flush();
         return $this->json(null, 204);
     }
+
+    #[Route('/{id}/deleteTeam/{idTeam}', methods: ['DELETE'])]
+    #[OA\Tag(name: 'Season')]
+    public function deleteTeam(
+        int $id,
+        int $idTeam,
+        EntityManagerInterface $entityManager,
+        SeasonHasTeamsRepository $seasonHasTeamsRepository
+    ): JsonResponse {
+        $seasonHasTeam = $seasonHasTeamsRepository->findOneBy([
+            'season_id' => $id,
+            'team_id' => $idTeam,
+        ]);
+
+        if (!$seasonHasTeam) {
+            return $this->json(['message' => 'Team not found in this season'], 404);
+        }
+
+        $entityManager->remove($seasonHasTeam);
+        $entityManager->flush();
+
+        return $this->json(null, 204);
+    }
+
+    #[Route('/{id}/addTeams', methods: ['POST'])]
+    #[OA\Tag(name: 'Season')]
+    public function addTeams(
+        int $id,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        SeasonRepository $seasonRepository,
+        TeamRepository $teamRepository
+    ): JsonResponse {
+        $season = $seasonRepository->find($id);
+        if (!$season) {
+            return $this->json(['message' => 'Season not found'], 404);
+        }
+
+        $data = json_decode($request->getContent(), true);
+        if (!isset($data['teamIds']) || !is_array($data['teamIds'])) {
+            return $this->json(['message' => 'Invalid teamIds data'], 400);
+        }
+
+        foreach ($data['teamIds'] as $teamId) {
+            $team = $teamRepository->find($teamId);
+            if (!$team) {
+                continue;
+            }
+
+            $seasonHasTeam = new SeasonHasTeams();
+            $seasonHasTeam->setSeasonId($season);
+            $seasonHasTeam->setTeamId($team);
+            $seasonHasTeam->setPoints(0);
+
+            $entityManager->persist($seasonHasTeam);
+        }
+
+        $entityManager->flush();
+
+        return $this->json(['message' => 'Teams added to season'], 201);
+    }
+
 }

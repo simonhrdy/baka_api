@@ -207,5 +207,41 @@ class TeamController extends AbstractController
         return new JsonResponse($teams, 200);
     }
 
+    #[Route('/not-in-season/{seasonId}', methods: ['GET'])]
+    #[OA\Tag(name: 'Team')]
+    public function getTeamsNotInSeason(
+        int $seasonId,
+        EntityManagerInterface $entityManager,
+        SerializerInterface $serializer
+    ): JsonResponse {
+        $season = $entityManager->getRepository(Season::class)->find($seasonId);
+
+        if (!$season) {
+            return new JsonResponse(['error' => 'Sezóna nebyla nalezena.'], 404);
+        }
+
+        $assignedTeamIds = $entityManager->getRepository(SeasonHasTeams::class)
+            ->createQueryBuilder('sht')
+            ->select('IDENTITY(sht.team_id)')
+            ->where('sht.season_id = :season')
+            ->setParameter('season', $seasonId)
+            ->getQuery()
+            ->getScalarResult();
+
+        $assignedTeamIds = array_map(fn($item) => $item[1], $assignedTeamIds); // převést na ploché pole
+
+        $qb = $entityManager->getRepository(Team::class)->createQueryBuilder('t');
+        if (!empty($assignedTeamIds)) {
+            $qb->where($qb->expr()->notIn('t.id', ':assignedTeamIds'))
+                ->setParameter('assignedTeamIds', $assignedTeamIds);
+        }
+
+        $teamsNotInSeason = $qb->getQuery()->getResult();
+
+        $json = $serializer->serialize($teamsNotInSeason, 'json', ['groups' => 'team:list']);
+
+        return new JsonResponse($json, 200, [], true);
+    }
+
 
 }

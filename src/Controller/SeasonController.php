@@ -76,21 +76,37 @@ class SeasonController extends AbstractController
     public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+
+        $league = $entityManager->getRepository(League::class)->find($data['league_id']);
+        if (!$league) {
+            return $this->json(['message' => 'Liga nebyla nalezena.'], 404);
+        }
+
+        if (!empty($data['is_active']) && $data['is_active'] === true) {
+            $existingActive = $entityManager->getRepository(Season::class)->findOneBy([
+                'league_id' => $league,
+                'is_active' => true,
+            ]);
+
+            if ($existingActive) {
+                return $this->json([
+                    'message' => 'Tato liga již má aktivní sezónu. Nejprve ji deaktivujte.'
+                ], 400);
+            }
+        }
+
         $season = new Season();
         $season->setActive($data['is_active']);
         $season->setYearStart(new \DateTime($data['year_start']));
         $season->setYearEnd(new \DateTime($data['year_end']));
-
-        $league = $entityManager->getRepository(League::class)->find($data['league_id']);
-        if($league){
-            $season->setLeagueId($league);
-        }
+        $season->setLeagueId($league);
 
         $entityManager->persist($season);
         $entityManager->flush();
 
         return $this->json([], 201);
     }
+
 
     #[Route('/{id}', methods: ['PUT'])]
     #[OA\Tag(name: 'Season')]

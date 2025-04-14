@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Game;
 use App\Entity\GameAnalysis;
 use App\Entity\GameBetting;
+use App\Entity\League;
 use App\Entity\Lineup;
 use App\Entity\Season;
 use App\Entity\Team;
@@ -71,7 +72,7 @@ class GameController extends AbstractController
         $game->setLap($data['lap'] ?? null);
         $game->setStatus(Status::from($data['status'] ?? Status::NOT_STARTED->value));
 
-        $league = $entityManager->getRepository(Season::class)->find($data['league_id'] ?? null);
+        $league = $entityManager->getRepository(League::class)->find($data['league_id'] ?? null);
         if ($league) {
             $game->setLeagueId($league);
         }

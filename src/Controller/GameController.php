@@ -71,6 +71,11 @@ class GameController extends AbstractController
         $game->setLap($data['lap'] ?? null);
         $game->setStatus($data['status'] ?? Status::NOT_STARTED);
 
+        $league = $entityManager->getRepository(Season::class)->find($data['league_id'] ?? null);
+        if ($league) {
+            $game->setLeagueId($league);
+        }
+
         $user = $entityManager->getRepository(User::class)->find($data['supervisor_id'] ?? null);
         $game->setSuperviserId($user ?? null);
 

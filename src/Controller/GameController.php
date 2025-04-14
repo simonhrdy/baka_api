@@ -87,7 +87,6 @@ class GameController extends AbstractController
         $game->setAwayTeamId($awayTeam);
 
 
-
         $entityManager->persist($game);
         $entityManager->flush();
 
@@ -99,14 +98,41 @@ class GameController extends AbstractController
     public function update(Game $game, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+
         if (isset($data['date_of_game'])) {
             $game->setDateOfGame(new \DateTime($data['date_of_game']));
         }
 
+        $game->setLap($data['lap'] ?? null);
+        $game->setStatus(Status::from($data['status'] ?? Status::NOT_STARTED->value));
+
+        if (isset($data['league_id'])) {
+            $league = $entityManager->getRepository(League::class)->find($data['league_id']);
+            if ($league) {
+                $game->setLeagueId($league);
+            }
+        }
+
+        $user = $entityManager->getRepository(User::class)->find($data['supervisor_id'] ?? null);
+        $game->setSuperviserId($user ?? null);
+
+        if (isset($data['home_team_id'])) {
+            $homeTeam = $entityManager->getRepository(Team::class)->find($data['home_team_id']);
+            $game->setHomeTeamId($homeTeam);
+        }
+
+        if (isset($data['away_team_id'])) {
+            $awayTeam = $entityManager->getRepository(Team::class)->find($data['away_team_id']);
+            $game->setAwayTeamId($awayTeam);
+        }
+
+        $game->setParametrs($data['statistics'] ?? []);
+
         $entityManager->flush();
 
-        return $this->json($game);
+        return $this->json([], 200);
     }
+
 
     #[Route('/{id}', methods: ['DELETE'])]
     #[OA\Tag(name: 'Game')]

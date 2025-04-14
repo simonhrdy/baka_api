@@ -228,7 +228,7 @@ class TeamController extends AbstractController
             ->getQuery()
             ->getScalarResult();
 
-        $assignedTeamIds = array_map(fn($item) => $item[1], $assignedTeamIds); // převést na ploché pole
+        $assignedTeamIds = array_map(fn($item) => $item[1], $assignedTeamIds);
 
         $qb = $entityManager->getRepository(Team::class)->createQueryBuilder('t');
         if (!empty($assignedTeamIds)) {

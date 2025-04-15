@@ -71,8 +71,6 @@ class PlayerController extends AbstractController
     }
 
 
-
-
     #[Route('/team/{idTeam}', methods: ['GET'])]
     #[OA\Tag(name: 'Player')]
     public function getPlayersFromTeam(int $idTeam, Request $request, EntityManagerInterface $entityManager): JsonResponse

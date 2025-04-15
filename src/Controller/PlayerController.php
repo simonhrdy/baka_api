@@ -70,6 +70,19 @@ class PlayerController extends AbstractController
         return $this->json($player, 200, [], ['groups' => 'player:list']);
     }
 
+
+
+
+    #[Route('/team/{idTeam}', methods: ['GET'])]
+    #[OA\Tag(name: 'Player')]
+    public function getPlayersFromTeam(int $idTeam, Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $team = $entityManager->getRepository(Team::class)->find($idTeam);
+        $players = $entityManager->getRepository(Player::class)->findBy(['team_id' => $team]);
+        return $this->json($players, 200, [], ['groups' => 'player:list']);
+    }
+
+
     #[Route('', methods: ['POST'])]
     #[OA\Tag(name: 'Player')]
     public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse

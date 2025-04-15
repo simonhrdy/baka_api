@@ -7,6 +7,7 @@ use App\Entity\GameAnalysis;
 use App\Entity\GameBetting;
 use App\Entity\League;
 use App\Entity\Lineup;
+use App\Entity\Player;
 use App\Entity\Season;
 use App\Entity\Team;
 use App\Entity\User;
@@ -127,6 +128,48 @@ class GameController extends AbstractController
         }
 
         $game->setParametrs($data['statistics'] ?? []);
+
+        $lineupRepository = $entityManager->getRepository(Lineup::class);
+        $oldLineups = $lineupRepository->findBy(['game' => $game]);
+
+        foreach ($oldLineups as $lineup) {
+            $entityManager->remove($lineup);
+        }
+
+        if (isset($data['lineUpHome']) && is_array($data['lineUpHome'])) {
+            $homeTeam = $game->getHomeTeamId();
+            foreach ($data['lineUpHome'] as $playerData) {
+                if (isset($playerData['id'])) {
+                    $player = $entityManager->getRepository(Player::class)->find($playerData['id']);
+                    if ($player) {
+                        $lineup = new Lineup();
+                        $lineup->setGame($game);
+                        $lineup->setTeam($homeTeam);
+                        $lineup->setPlayer($player);
+                        $lineup->setStarter((bool) ($playerData['is_starter'] ?? false));
+                        $entityManager->persist($lineup);
+                    }
+                }
+            }
+        }
+
+        if (isset($data['lineUpAway']) && is_array($data['lineUpAway'])) {
+            $awayTeam = $game->getAwayTeamId();
+            foreach ($data['lineUpAway'] as $playerData) {
+                if (isset($playerData['id'])) {
+                    $player = $entityManager->getRepository(Player::class)->find($playerData['id']);
+                    if ($player) {
+                        $lineup = new Lineup();
+                        $lineup->setGame($game);
+                        $lineup->setTeam($awayTeam);
+                        $lineup->setPlayer($player);
+                        $lineup->setStarter((bool) ($playerData['is_starter'] ?? false));
+                        $entityManager->persist($lineup);
+                    }
+                }
+            }
+        }
+
 
         $entityManager->flush();
 

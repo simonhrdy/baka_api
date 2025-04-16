@@ -285,7 +285,7 @@ class GameController extends AbstractController
         $betting = $entityManager->getRepository(GameBetting::class)->findOneBy(['game' => $game]);
 
         if (!$betting) {
-            return $this->json([], 200);
+            return $this->json(['error' => 'No betting tips found for this game'], 404);
         }
 
         $json = $serializer->serialize($betting, 'json', ['groups' => 'betting:list']);
@@ -299,7 +299,7 @@ class GameController extends AbstractController
         $analysis = $entityManager->getRepository(GameAnalysis::class)->findOneBy(['game' => $game]);
 
         if (!$analysis) {
-            return $this->json([], 200);
+            return $this->json(['error' => 'No analysis found for this game'], 404);
         }
 
         $json = $serializer->serialize($analysis, 'json', ['groups' => 'analysis:list']);

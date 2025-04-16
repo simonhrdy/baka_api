@@ -87,6 +87,19 @@ class GameController extends AbstractController
         $awayTeam = $entityManager->getRepository(Team::class)->find($data['away_team_id']);
         $game->setAwayTeamId($awayTeam);
 
+        if(isset($data['betting_tips'])){
+            $gameBetting = new GameBetting();
+            $gameBetting->setGame($game);
+            $gameBetting->setContent($data['betting_tips']);
+            $entityManager->persist($gameBetting);
+        }
+
+        if(isset($data['match_analysis'])){
+            $gameAnalysis = new GameAnalysis();
+            $gameAnalysis->setGame($game);
+            $gameAnalysis->setContent($data['match_analysis']);
+            $entityManager->persist($gameAnalysis);
+        }
 
         $entityManager->persist($game);
         $entityManager->flush();
@@ -170,6 +183,29 @@ class GameController extends AbstractController
             }
         }
 
+        if(isset($data['betting_tips'])){
+            $gameBetting = $entityManager->getRepository(GameBetting::class)->findOneBy(['game' => $game]);
+            if ($gameBetting) {
+                $gameBetting->setContent($data['betting_tips']);
+            } else {
+                $gameBetting = new GameBetting();
+                $gameBetting->setGame($game);
+                $gameBetting->setContent($data['betting_tips']);
+                $entityManager->persist($gameBetting);
+            }
+        }
+
+        if(isset($data['match_analysis'])){
+            $gameAnalysis = $entityManager->getRepository(GameAnalysis::class)->findOneBy(['game' => $game]);
+            if ($gameAnalysis) {
+                $gameAnalysis->setContent($data['match_analysis']);
+            } else {
+                $gameAnalysis = new GameAnalysis();
+                $gameAnalysis->setGame($game);
+                $gameAnalysis->setContent($data['match_analysis']);
+                $entityManager->persist($gameAnalysis);
+            }
+        }
 
         $entityManager->flush();
 

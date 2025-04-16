@@ -78,6 +78,8 @@ class UserController extends AbstractController
             $user->setPassword($data['password']);
         }
 
+        $user->setRoles($data['roles'] ?? []);
+
         $entityManager->flush();
 
         return $this->json($user);

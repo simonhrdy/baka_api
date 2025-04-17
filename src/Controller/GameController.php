@@ -9,6 +9,7 @@ use App\Entity\League;
 use App\Entity\Lineup;
 use App\Entity\Player;
 use App\Entity\Season;
+use App\Entity\SeasonHasTeams;
 use App\Entity\Team;
 use App\Entity\User;
 use App\Enum\Status;
@@ -141,6 +142,82 @@ class GameController extends AbstractController
         }
 
         $game->setParametrs($data['statistics'] ?? []);
+
+        $season = $entityManager
+            ->getRepository(Season::class)
+            ->findOneBy([
+                'league_id' => $game->getLeagueId(),
+                'is_active' => true
+            ]);
+
+        if ($season && is_array($data['statistics'] ?? null)) {
+            $stats = $data['statistics'];
+
+
+            $shtRepo = $entityManager->getRepository(SeasonHasTeams::class);
+            $homeStanding = $shtRepo->findOneBy([
+                'season_id' => $season,
+                'team_id'   => $game->getHomeTeamId(),
+            ]);
+            $awayStanding = $shtRepo->findOneBy([
+                'season_id' => $season,
+                'team_id'   => $game->getAwayTeamId(),
+            ]);
+
+            if ($homeStanding && $awayStanding) {
+                $homePts = 0;
+                $awayPts = 0;
+
+                $sportCode = $game->getLeagueId()->getSport()->getUrl();
+
+                switch ($sportCode) {
+                    case 'fotbal':
+                        $hg = (int) ($stats['count_of_goals_home_team'] ?? 0);
+                        $ag = (int) ($stats['count_of_goals_away_team'] ?? 0);
+                        if ($hg > $ag) {
+                            $homePts = 3;
+                        } elseif ($hg < $ag) {
+                            $awayPts = 3;
+                        } else {
+                            $homePts = $awayPts = 1;
+                        }
+                        break;
+
+                    case 'hokej':
+                        $hg = (int) ($stats['hockey_count_of_goals_home_team'] ?? 0);
+                        $ag = (int) ($stats['hockey_count_of_goals_away_team'] ?? 0);
+                        if ($hg > $ag) {
+                            $homePts = 2;
+                        } elseif ($hg < $ag) {
+                            $awayPts = 2;
+                        } else {
+                            $homePts = $awayPts = 1;
+                        }
+                        break;
+
+                    case 'sipky':
+                        $homeSets = (int) ($stats['count_of_sets_first_player']  ?? 0);
+                        $awaySets = (int) ($stats['count_of_sets_second_player'] ?? 0);
+                        if ($homeSets > $awaySets) {
+                            $homePts = 2;
+                        } elseif ($homeSets < $awaySets) {
+                            $awayPts = 2;
+                        } else {
+                            $homePts = $awayPts = 1;
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+
+
+                $homeStanding->setPoints($homeStanding->getPoints() + $homePts);
+                $awayStanding->setPoints($awayStanding->getPoints() + $awayPts);
+                $entityManager->persist($homeStanding);
+                $entityManager->persist($awayStanding);
+            }
+        }
 
         $lineupRepository = $entityManager->getRepository(Lineup::class);
         $oldLineups = $lineupRepository->findBy(['game' => $game]);

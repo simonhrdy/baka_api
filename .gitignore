@@ -2,6 +2,7 @@
 vendor/
 .DS_Store
 var/
+public/uploads/
 
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem

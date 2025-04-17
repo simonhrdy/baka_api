@@ -8,6 +8,7 @@ use App\Entity\GameBetting;
 use App\Entity\League;
 use App\Entity\Lineup;
 use App\Entity\Player;
+use App\Entity\PlayerStats;
 use App\Entity\Season;
 use App\Entity\SeasonHasTeams;
 use App\Entity\Team;
@@ -253,6 +254,50 @@ class GameController extends AbstractController
             }
         }
 
+        if (in_array($game->getLeagueId()->getSport()->getUrl(), ['fotbal', 'hokej'], true)) {
+            $playerRepo = $entityManager->getRepository(Player::class);
+            $psRepo     = $entityManager->getRepository(PlayerStats::class);
+
+            $actionsOld = $oldStats['actions'] ?? [];
+            if (is_string($actionsOld)) {
+                $actionsOld = json_decode($actionsOld, true) ?: [];
+            }
+            $actionsNew = $newStats['actions'] ?? [];
+            if (is_string($actionsNew)) {
+                $actionsNew = json_decode($actionsNew, true) ?: [];
+            }
+
+            $oldGoals = $this->countGoals($actionsOld);
+            $newGoals = $this->countGoals($actionsNew);
+
+            $allIds = array_unique(array_merge(array_keys($oldGoals), array_keys($newGoals)));
+            foreach ($allIds as $playerId) {
+                $delta = ($newGoals[$playerId] ?? 0) - ($oldGoals[$playerId] ?? 0);
+                if ($delta === 0) {
+                    continue;
+                }
+
+                $player = $playerRepo->find($playerId);
+                if (!$player) {
+                    continue;
+                }
+
+                $ps = $psRepo->findOneBy(['player_id' => $player]);
+                if (!$ps) {
+                    $ps = new PlayerStats();
+                    $ps->setPlayerId($player)
+                        ->setParametrs(['goals' => 0]);
+                }
+
+                $params       = $ps->getParametrs() ?? [];
+                $currentGoals = (int) ($params['goals'] ?? 0);
+                $params['goals'] = $currentGoals + $delta;
+
+                $ps->setParametrs($params);
+                $entityManager->persist($ps);
+            }
+        }
+
         $entityManager->flush();
 
         return $this->json([], 200);
@@ -405,5 +450,17 @@ class GameController extends AbstractController
         }
 
         return ['home' => $homePts, 'away' => $awayPts];
+    }
+
+    private function countGoals(array $actions): array
+    {
+        $goals = [];
+        foreach ($actions as $act) {
+            if (isset($act['type'], $act['id']) && (int)$act['type'] === 1) {
+                $pid = (int)$act['id'];
+                $goals[$pid] = ($goals[$pid] ?? 0) + 1;
+            }
+        }
+        return $goals;
     }
 }

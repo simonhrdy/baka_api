@@ -117,26 +117,32 @@ class GameController extends AbstractController
         if (isset($data['date_of_game'])) {
             $game->setDateOfGame(new \DateTime($data['date_of_game']));
         }
-        $game->setLap($data['lap'] ?? null);
-        $game->setStatus(Status::from($data['status'] ?? Status::NOT_STARTED->value));
+        $game->setLap($data['lap'] ?? null)
+            ->setStatus(Status::from($data['status'] ?? Status::NOT_STARTED->value));
 
-        if (isset($data['league_id'])) {
-            $league = $entityManager->getRepository(League::class)->find($data['league_id']);
-            if ($league) {
-                $game->setLeagueId($league);
-            }
+        if (isset($data['league_id'])
+            && $league = $entityManager->getRepository(League::class)->find($data['league_id'])
+        ) {
+            $game->setLeagueId($league);
         }
 
-        $user = $entityManager->getRepository(User::class)->find($data['supervisor_id'] ?? null);
-        $game->setSuperviserId($user ?? null);
+        $game->setSuperviserId(
+            $entityManager->getRepository(User::class)
+                ->find($data['supervisor_id'] ?? null)
+                ?: null
+        );
 
         if (isset($data['home_team_id'])) {
-            $homeTeam = $entityManager->getRepository(Team::class)->find($data['home_team_id']);
-            $game->setHomeTeamId($homeTeam);
+            $game->setHomeTeamId(
+                $entityManager->getRepository(Team::class)
+                    ->find($data['home_team_id'])
+            );
         }
         if (isset($data['away_team_id'])) {
-            $awayTeam = $entityManager->getRepository(Team::class)->find($data['away_team_id']);
-            $game->setAwayTeamId($awayTeam);
+            $game->setAwayTeamId(
+                $entityManager->getRepository(Team::class)
+                    ->find($data['away_team_id'])
+            );
         }
 
         $oldStats = $game->getParametrs() ?? [];
@@ -149,7 +155,7 @@ class GameController extends AbstractController
         ]);
 
         if ($season && is_array($newStats)) {
-            $shtRepo = $entityManager->getRepository(SeasonHasTeams::class);
+            $shtRepo      = $entityManager->getRepository(SeasonHasTeams::class);
             $homeStanding = $shtRepo->findOneBy([
                 'season_id' => $season,
                 'team_id'   => $game->getHomeTeamId(),
@@ -162,119 +168,94 @@ class GameController extends AbstractController
             if ($homeStanding && $awayStanding) {
                 $sportCode = $game->getLeagueId()->getSport()->getUrl();
 
-                $oldPts = $this->calculatePoints($sportCode, $oldStats);
-                $newPts = $this->calculatePoints($sportCode, $newStats);
+                $prevH = $game->getHomePointsAwarded();
+                $prevA = $game->getAwayPointsAwarded();
+                $homeStanding->setPoints($homeStanding->getPoints() - $prevH);
+                $awayStanding->setPoints($awayStanding->getPoints() - $prevA);
 
-                $deltaH = $newPts['home'] - $oldPts['home'];
-                $deltaA = $newPts['away'] - $oldPts['away'];
+                ['home' => $homePts, 'away' => $awayPts] =
+                    $this->calculatePoints($sportCode, $newStats);
 
-                $homeStanding->setPoints($homeStanding->getPoints() + $deltaH);
-                $awayStanding->setPoints($awayStanding->getPoints() + $deltaA);
+                $homeStanding->setPoints($homeStanding->getPoints() + $homePts);
+                $awayStanding->setPoints($awayStanding->getPoints() + $awayPts);
+
+                $game->setHomePointsAwarded($homePts);
+                $game->setAwayPointsAwarded($awayPts);
 
                 $entityManager->persist($homeStanding);
                 $entityManager->persist($awayStanding);
             }
         }
 
-
         $lineupRepository = $entityManager->getRepository(Lineup::class);
         $oldLineups = $lineupRepository->findBy(['game' => $game]);
         foreach ($oldLineups as $lineup) {
             $entityManager->remove($lineup);
         }
+
         if (isset($data['lineUpHome']) && is_array($data['lineUpHome'])) {
             $homeTeam = $game->getHomeTeamId();
-            foreach ($data['lineUpHome'] as $pd) {
-                if (isset($pd['id'])) {
-                    $player = $entityManager->getRepository(Player::class)->find($pd['id']);
+            foreach ($data['lineUpHome'] as $playerData) {
+                if (isset($playerData['id'])) {
+                    $player = $entityManager->getRepository(Player::class)->find($playerData['id']);
                     if ($player) {
-                        $l = new Lineup();
-                        $l->setGame($game)
+                        $lineup = new Lineup();
+                        $lineup->setGame($game)
                             ->setTeam($homeTeam)
                             ->setPlayer($player)
-                            ->setStarter((bool)($pd['is_starter'] ?? false));
-                        $entityManager->persist($l);
+                            ->setStarter((bool)($playerData['is_starter'] ?? false));
+                        $entityManager->persist($lineup);
                     }
                 }
             }
         }
+
         if (isset($data['lineUpAway']) && is_array($data['lineUpAway'])) {
             $awayTeam = $game->getAwayTeamId();
-            foreach ($data['lineUpAway'] as $pd) {
-                if (isset($pd['id'])) {
-                    $player = $entityManager->getRepository(Player::class)->find($pd['id']);
+            foreach ($data['lineUpAway'] as $playerData) {
+                if (isset($playerData['id'])) {
+                    $player = $entityManager->getRepository(Player::class)->find($playerData['id']);
                     if ($player) {
-                        $l = new Lineup();
-                        $l->setGame($game)
+                        $lineup = new Lineup();
+                        $lineup->setGame($game)
                             ->setTeam($awayTeam)
                             ->setPlayer($player)
-                            ->setStarter((bool)($pd['is_starter'] ?? false));
-                        $entityManager->persist($l);
+                            ->setStarter((bool)($playerData['is_starter'] ?? false));
+                        $entityManager->persist($lineup);
                     }
                 }
             }
         }
 
         if (isset($data['betting_tips'])) {
-            $gb = $entityManager->getRepository(GameBetting::class)
+            $gameBetting = $entityManager->getRepository(GameBetting::class)
                 ->findOneBy(['game' => $game]);
-            if ($gb) {
-                $gb->setContent($data['betting_tips']);
+            if ($gameBetting) {
+                $gameBetting->setContent($data['betting_tips']);
             } else {
-                $gb = new GameBetting();
-                $gb->setGame($game)->setContent($data['betting_tips']);
-                $entityManager->persist($gb);
+                $gameBetting = new GameBetting();
+                $gameBetting->setGame($game)
+                    ->setContent($data['betting_tips']);
+                $entityManager->persist($gameBetting);
             }
         }
 
         if (isset($data['match_analysis'])) {
-            $ga = $entityManager->getRepository(GameAnalysis::class)
+            $gameAnalysis = $entityManager->getRepository(GameAnalysis::class)
                 ->findOneBy(['game' => $game]);
-            if ($ga) {
-                $ga->setContent($data['match_analysis']);
+            if ($gameAnalysis) {
+                $gameAnalysis->setContent($data['match_analysis']);
             } else {
-                $ga = new GameAnalysis();
-                $ga->setGame($game)->setContent($data['match_analysis']);
-                $entityManager->persist($ga);
+                $gameAnalysis = new GameAnalysis();
+                $gameAnalysis->setGame($game)
+                    ->setContent($data['match_analysis']);
+                $entityManager->persist($gameAnalysis);
             }
         }
 
         $entityManager->flush();
 
         return $this->json([], 200);
-    }
-
-    private function calculatePoints(string $sportCode, array $stats): array
-    {
-        $homePts = $awayPts = 0;
-
-        switch ($sportCode) {
-            case 'fotbal':
-                $hg = (int) ($stats['count_of_goals_home_team'] ?? 0);
-                $ag = (int) ($stats['count_of_goals_away_team'] ?? 0);
-                if ($hg > $ag)         $homePts = 3;
-                elseif ($hg < $ag)     $awayPts = 3;
-                else                   $homePts = $awayPts = 1;
-                break;
-
-            case 'hokej':
-                $hg = (int) ($stats['hockey_count_of_goals_home_team'] ?? 0);
-                $ag = (int) ($stats['hockey_count_of_goals_away_team'] ?? 0);
-                if ($hg > $ag)         $homePts = 2;
-                elseif ($hg < $ag)     $awayPts = 2;
-                else                   $homePts = $awayPts = 1;
-                break;
-
-            case 'sipky':
-                $hs = (int) ($stats['count_of_sets_first_player']  ?? 0);
-                $as = (int) ($stats['count_of_sets_second_player'] ?? 0);
-                if ($hs > $as)         $homePts = 2;
-                elseif ($hs < $as)     $awayPts = 2;
-                else                   $homePts = $awayPts = 1;
-                break;
-        }
-
-        return ['home' => $homePts, 'away' => $awayPts];
     }
 
 
@@ -390,4 +371,39 @@ class GameController extends AbstractController
     }
 
 
+    private function calculatePoints(string $sportCode, array $stats): array
+    {
+        $homePts = $awayPts = 0;
+
+        switch ($sportCode) {
+            case 'fotbal':
+                $hg = (int) ($stats['count_of_goals_home_team'] ?? 0);
+                $ag = (int) ($stats['count_of_goals_away_team'] ?? 0);
+                if ($hg > $ag)         $homePts = 3;
+                elseif ($hg < $ag)     $awayPts = 3;
+                else                   $homePts = $awayPts = 1;
+                break;
+
+            case 'hokej':
+                $hg = (int) ($stats['hockey_count_of_goals_home_team'] ?? 0);
+                $ag = (int) ($stats['hockey_count_of_goals_away_team'] ?? 0);
+                if ($hg > $ag)         $homePts = 2;
+                elseif ($hg < $ag)     $awayPts = 2;
+                else                   $homePts = $awayPts = 1;
+                break;
+
+            case 'sipky':
+                $hs = (int) ($stats['count_of_sets_first_player']  ?? 0);
+                $as = (int) ($stats['count_of_sets_second_player'] ?? 0);
+                if ($hs > $as)         $homePts = 2;
+                elseif ($hs < $as)     $awayPts = 2;
+                else                   $homePts = $awayPts = 1;
+                break;
+
+            default:
+                break;
+        }
+
+        return ['home' => $homePts, 'away' => $awayPts];
+    }
 }

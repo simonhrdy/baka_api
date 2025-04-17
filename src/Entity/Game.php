@@ -47,6 +47,12 @@ class Game
     #[Groups(['game:list'])]
     private ?User $superviser_id = null;
 
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $homePointsAwarded = 0;
+
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $awayPointsAwarded = 0;
+
     #[ORM\OneToMany(targetEntity: MatchHasReferees::class, mappedBy: 'game')]
     #[Groups(['game:list'])]
     private Collection $game;
@@ -164,5 +170,25 @@ class Game
     public function setStatus(Status $status): void
     {
         $this->status = $status;
+    }
+
+    public function getHomePointsAwarded(): int
+    {
+        return $this->homePointsAwarded;
+    }
+
+    public function setHomePointsAwarded(int $homePointsAwarded): void
+    {
+        $this->homePointsAwarded = $homePointsAwarded;
+    }
+
+    public function getAwayPointsAwarded(): int
+    {
+        return $this->awayPointsAwarded;
+    }
+
+    public function setAwayPointsAwarded(int $awayPointsAwarded): void
+    {
+        $this->awayPointsAwarded = $awayPointsAwarded;
     }
 }

@@ -97,7 +97,13 @@ class PlayerController extends AbstractController
         if (!empty($data['imageBase64'])) {
             $imageData = base64_decode($data['imageBase64']);
             $filename = uniqid('player_', true) . '.jpg';
-            $path = $this->getParameter('upload_directory') . '/' . $filename;
+            $uploadDir = $this->getParameter('upload_directory');
+
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            $path = $uploadDir . '/' . $filename;
             file_put_contents($path, $imageData);
             $player->setImageSrc('https://coral-app-pmzum.ondigitalocean.app/uploads/' . $filename);
         }
